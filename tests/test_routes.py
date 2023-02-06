@@ -7,6 +7,10 @@ import pytest
 BOARD_TITLE = "Favorite Quotes"
 BOARD_OWNER = "Talia"
 
+##############
+# BOARD ROUTES #
+##############
+
 # CREATE
 def test_create_one_board(client):
     # Act
@@ -74,14 +78,31 @@ def test_get_boards_one_saved_board(client, one_saved_board):
     assert response_body[0]["board_id"] == 1
     assert response_body[0]["title"] == BOARD_TITLE
     assert response_body[0]["owner"] == BOARD_OWNER
-    
-    
 
+##############
+# CARD ROUTES #
+##############
 
-##################
-# Test get_card  #
-##################
+def test_get_all_cards_for_one_board():
+    pass
 
-#####################
-# Test delete_card  #
-#####################
+def test_get_all_cards_no_cards():
+    pass
+
+def test_add_one_card():
+    pass
+
+def test_add_one_card_invalid_board_id():
+    pass
+
+def test_add_one_card_nonexistent_board_id():
+    pass
+
+def test_add_one_card_must_include_message():
+    pass
+
+def test_update_likes_on_card():
+    pass
+
+def test_delete_one_card():
+    pass
