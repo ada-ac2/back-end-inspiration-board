@@ -57,4 +57,82 @@ def client(app):
 
 @pytest.fixture
 def one_board(app):
-    new_board = Board()
+    new_board = Board(
+        title = BOARD_TITLE_ONE,
+        owner = BOARD_OWNER_ONE
+    )
+    db.session.add(new_board)
+    db.session.commit()
+
+@pytest.fixture
+def two_board(app):
+    new_board = Board(
+        title = BOARD_TITLE_TWO,
+        owner = BOARD_OWNER_TWO
+    )
+    db.session.add(new_board)
+    db.session.commit()
+
+@pytest.fixture
+def three_board(app):
+    new_board = Board(
+        title = BOARD_TITLE_THREE,
+        owner = BOARD_OWNER_THREE
+    )
+    db.session.add(new_board)
+    db.session.commit()
+
+
+@pytest.fixture()
+def one_card(app):
+    new_card = Card(
+        message = CARD_ONE_MESSAGE,
+        likes_count = CARD_ONE_LIKES,
+        board_id = CARD_ONE_BOARD )
+    db.session.add(new_card)
+    db.session.commit()
+
+@pytest.fixture()
+def two_card(app):
+    new_card = Card(
+        message = CARD_TWO_MESSAGE,
+        likes_count = CARD_TWO_LIKES,
+        board_id = CARD_TWO_BOARD )
+    db.session.add(new_card)
+    db.session.commit()
+
+@pytest.fixture()
+def three_card(app):
+    new_card = Card(
+        message = CARD_THREE_MESSAGE,
+        likes_count = CARD_THREE_LIKES,
+        board_id = CARD_THREE_BOARD )
+    db.session.add(new_card)
+    db.session.commit()
+
+@pytest.fixture()
+def four_card(app):
+    new_card = Card(
+        message = CARD_FOUR_MESSAGE,
+        likes_count = CARD_FOUR_LIKES,
+        board_id = CARD_FOUR_BOARD )
+    db.session.add(new_card)
+    db.session.commit()
+
+@pytest.fixture()
+def five_card(app):
+    new_card = Card(
+        message = CARD_FIVE_MESSAGE,
+        likes_count = CARD_FIVE_LIKES,
+        board_id = CARD_FIVE_BOARD )
+    db.session.add(new_card)
+    db.session.commit()
+
+@pytest.fixture()
+def six_card(app):
+    new_card = Card(
+        message = CARD_SIX_MESSAGE,
+        likes_count = CARD_SIX_LIKES,
+        board_id = CARD_SIX_BOARD )
+    db.session.add(new_card)
+    db.session.commit()
