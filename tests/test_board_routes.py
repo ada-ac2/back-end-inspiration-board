@@ -21,7 +21,7 @@ def test_create_one_board(client):
     new_board = Board.query.get(1)
 
     assert new_board
-    assert new_board.BOARD_TITLE == BOARD_TITLE
+    assert new_board.title == BOARD_TITLE
     assert new_board.owner == BOARD_OWNER
 
 def test_create_board_must_contain_BOARD_TITLE(client):
@@ -33,7 +33,7 @@ def test_create_board_must_contain_BOARD_TITLE(client):
 
     # Assert
     assert "message" in response_body
-    assert "Request body must include title." in response_body["message"]
+    assert "Request body must include title" in response_body["message"]
     assert response.status_code == 400
     assert Board.query.all() == []
 
@@ -46,7 +46,7 @@ def test_create_board_must_contain_owner(client):
 
     # Assert
     assert "message" in response_body
-    assert "Request body must include owner." in response_body["message"]
+    assert "Request body must include owner" in response_body["message"]
     assert response.status_code == 400
     assert Board.query.all() == []
 
@@ -68,6 +68,6 @@ def test_get_boards_one_saved_board(client, one_saved_board):
     # Assert
     assert response.status_code == 200
     assert len(response_body) == 1
-    assert response_body[0]["id"] == 1
+    assert response_body[0]["board_id"] == 1
     assert response_body[0]["title"] == BOARD_TITLE
     assert response_body[0]["owner"] == BOARD_OWNER
