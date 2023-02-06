@@ -8,9 +8,14 @@ class Board(db.Model):
 
     def to_dict(self):
         board_dict = {}
-        board_dict["id"] = self.board_id
+        board_dict["board_id"] = self.board_id
         board_dict["title"] = self.title
         board_dict["owner"] = self.owner
+        cards_list = []
+        for card in self.cards:
+            cards_list.append(card.to_dict())
+        board_dict["cards"] = cards_list
+        #board_dict["cards"] = [card.to_dict() for card in self.cards]
         return board_dict
 
     @classmethod
