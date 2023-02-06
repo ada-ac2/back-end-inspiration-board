@@ -105,9 +105,9 @@ def test_update_likes_on_card():
 
 def test_delete_one_card(client, one_saved_card):
     # Act 
-    response = client.delete("/boards/1/1")
+    response = client.delete("/boards/1/cards/1")
     response_body = response.get_json()
     
     # Assert
     assert response.status_code == 200
-    assert response["message"] == "Card #1 successfully deleted"
+    assert response_body["message"] == "Card #1 successfully deleted"
