@@ -5,7 +5,7 @@ from app import db
 
 cards_bp = Blueprint("cards_bp", __name__, url_prefix="/cards")
 
-cards_bp.route("/<card_id>", methods=["DELETE"])
+@cards_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card(card_id):
     card = validate_model(Card, card_id)
 
@@ -18,7 +18,7 @@ def delete_card(card_id):
     }
     return make_response(jsonify(response_obj),200)
 
-cards_bp.route("/<card_id>/add-likes", methods=["PATCH"])
+@cards_bp.route("/<card_id>/add-likes", methods=["PATCH"])
 def add_likes_to_card(card_id):
     card = validate_model(Card,card_id)
 
@@ -35,7 +35,7 @@ def add_likes_to_card(card_id):
 
 required_data = ["message"]
 
-cards_bp.route("",methods=["POST"])
+@cards_bp.route("",methods=["POST"])
 def create_card():
     request_body = request.get_json(silent=True)
     validate_request_body(request_body, required_data)
