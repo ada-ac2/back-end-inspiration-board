@@ -9,8 +9,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 load_dotenv()
 
-
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__)
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -26,6 +25,9 @@ def create_app():
     # Register Blueprints 
     from app.routes.card_routes import cards_bp 
     app.register_blueprint(cards_bp)
+    
+    from .routes.board_routes import boards_bp
+    app.register_blueprint(boards_bp)
 
     CORS(app)
     return app
