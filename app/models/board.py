@@ -12,13 +12,15 @@ class Board(db.Model):
         return {
             "board_id": self.board_id,
             "title": self.title,
-            "owner": self.owner
+            "owner": self.owner,
+            "cards": [card for card in self.cards]
         }
 
     @classmethod
     def from_dict(cls, request_data):
-        new_board= Board(
-            title=request_data["title"],
-            owner=request_data["owner"]
+        new_board = Board(
+            title = request_data["title"],
+            owner = request_data["owner"],
+            cards = request_data["cards"]
         )
         return new_board
