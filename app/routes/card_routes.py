@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, make_response
-from app.routes.helpers import validate_model
+from app.routes.helpers import validate_model, validate_request_body
 from app.models.card import Card
 from app import db
 
@@ -33,3 +33,21 @@ def add_likes_to_card(card_id):
     }
     return make_response(jsonify(response_obj),200)
 
+required_data = ["message"]
+
+cards_bp.route("",methods=["POST"])
+def create_card():
+    request_body = request.get_json(silent=True)
+    validate_request_body(request_body)
+
+    new_card = Card(message=request_body["message"])
+
+    db.session.add(new_card)
+    db.session.commit()
+
+    response_obj = {
+        "statuscode": 201,
+        "message": f"Created new card id: {new_card.id}",
+        "data": new_card.to_dict()
+    }
+    return make_response(jsonify(response_obj),201)
