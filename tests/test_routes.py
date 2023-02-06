@@ -2,7 +2,6 @@ from operator import contains
 from werkzeug.exceptions import HTTPException
 from app.models.board import Board
 from app.models.card import Card
-import pytest
 
 BOARD_TITLE = "Favorite Quotes"
 BOARD_OWNER = "Talia"
@@ -104,5 +103,11 @@ def test_add_one_card_must_include_message():
 def test_update_likes_on_card():
     pass
 
-def test_delete_one_card():
-    pass
+def test_delete_one_card(client, one_saved_card):
+    # Act 
+    response = client.delete("/boards/1/1")
+    response_body = response.get_json()
+    
+    # Assert
+    assert response.status_code == 200
+    assert response["message"] == "Card #1 successfully deleted"
