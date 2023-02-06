@@ -2,6 +2,8 @@ import pytest
 from app import create_app
 from app import db
 
+BOARD_TITLE = "Favorite Quotes"
+BOARD_OWNER = "Talia"
 
 @pytest.fixture
 def app():
@@ -16,7 +18,15 @@ def app():
     with app.app_context():
         db.drop_all()
 
-
 @pytest.fixture
 def client(app):
     return app.test_client()
+
+@pytest.fixture
+def one_saved_board(app):
+    new_board = Board(
+        title=BOARD_TITLE,
+        owner=BOARD_OWNER
+    )
+    db.session.add(new_board)
+    db.session.commit()
