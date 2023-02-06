@@ -17,4 +17,7 @@ def delete_card(card_id):
         "message": f"Card with id: {card_id} successfully deleted"
     }
 
+# cards_bp.route("/<card_id>/add-likes", methods=["PATCH"])
+# def add_likes_to_card(card_id):
+#     card = validate_model(Card,card_id)
 
