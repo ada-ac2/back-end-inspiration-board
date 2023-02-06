@@ -9,7 +9,7 @@ cards_bp = Blueprint("cards_bp", __name__, url_prefix="/cards")
 def delete_card(card_id):
     card = validate_model(Card, card_id)
 
-    db.session.delete(card_id)
+    db.session.delete(card)
     db.session.commit()
 
     response_obj = {
