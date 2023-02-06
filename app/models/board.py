@@ -3,13 +3,13 @@ from app import db
 
 class Board(db.Model):
     # primary key
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     # other columns
     title = db.Column(db.String(45), nullable=False)
     owner = db.Column(db.String(45), nullable=False)
     status = db.Column(db.Boolean, default=True)
     # foreign key associate to Card table
-    cards = db.relationship("Card")
+    cards = db.relationship("Card", back_populates="board")
 
     def to_dict(self):
         board_as_dict = dict()
