@@ -92,12 +92,12 @@ def test_get_all_boards_with_cards_returns_boards_info(client, list_three_boards
                 "board_id": 1,
                 "card_id": 1,
                 "message" : "Pickles are priceless",
-                 "likes_count": 0},
+                "likes_count": 0},
                 {
                 "board_id": 1,
                 "card_id": 2,
-                 "message" : "Some Days are Fancy Free",
-                 "likes_count": 0}]
+                "message" : "Some Days are Fancy Free",
+                "likes_count": 0}]
         },
         {
             "board_id": 2,
@@ -107,8 +107,8 @@ def test_get_all_boards_with_cards_returns_boards_info(client, list_three_boards
                 {
                 "board_id": 2,
                 "card_id": 3,
-                 "message" : "I like my dancing pants",
-                 "likes_count": 1}]
+                "message" : "I like my dancing pants",
+                "likes_count": 1}]
         },
         {
             "board_id": 3,
@@ -118,8 +118,8 @@ def test_get_all_boards_with_cards_returns_boards_info(client, list_three_boards
                 {
                 "board_id": 3,
                 "card_id": 4,
-                 "message" : "Days are good Days are Bad Its okay to sometimes be sad",
-                 "likes_count": 2}]
+                "message" : "Days are good Days are Bad Its okay to sometimes be sad",
+                "likes_count": 2}]
         }
     ]
 
@@ -153,9 +153,6 @@ def test_get_all_cards_by_no_board_returns_error(client):
     response = client.get("/boards/1/cards")
     
     assert response.status_code == 404
-    
-
-
 
 # Tests for Card routes
 # GET all cards ???
@@ -173,9 +170,6 @@ def test_get_one_card_by_id(client,one_board,two_board, three_board, one_card,tw
     assert response_body["message"] == CARD_ONE_MESSAGE
     assert response_body["board_id"] == CARD_ONE_BOARD
     assert response_body["likes_count"] == CARD_ONE_LIKES
-
-
-
 
 
 def test_no_such_card_returns_error(client):
@@ -197,12 +191,12 @@ def test_delete_existing_card(client, one_board,two_board, three_board, one_card
     
 def test_delete_missing_card(client, one_board,two_board, three_board, one_card,two_card, three_card,four_card,five_card, six_card ):
     # Act 
-    response = client.delete("/cards/2")
+    response = client.delete("/cards/9")
     response_body = response.get_json()
 
     # Assert 
     assert response.status_code  == 404
-    assert response_body == {"message": "Card 2 not found"}
+    assert response_body == {"message": "Card 9 not found"}
 
 def test_delete_card_invalid_id(client, one_board,two_board, three_board, one_card,two_card, three_card,four_card,five_card, six_card):
     # Act

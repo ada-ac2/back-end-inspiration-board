@@ -108,7 +108,7 @@ def validate_model(cls, model_id):
     model = cls.query.get(model_id)
     if model:
         return model
-    abort(make_response({"message":f"{cls.__name__} with {model_id} not found"}, 404))
+    abort(make_response({"message": f"{cls.__name__} {model_id} not found"}, 404))
 
 def validate_board_input(board_data):
     if "title" not in board_data \
