@@ -31,6 +31,7 @@ def create_board():
 def add_card_to_board(board_id):
     pass
 
+#Megan
 # Read a board by its id, display all cards underneath 
 @board_bp.route("/<board_id>/cards", methods = ["GET"])
 def get_cards_by_board_id(board_id): 
@@ -53,6 +54,7 @@ def delete_board(board_id):
     pass
 
 # --------------------------------- Card routes --------------------------------- 
+
 # Get all cards when no board is selected
 @card_bp.route("", methods = ["GET"])
 def get_all_cards():
@@ -72,7 +74,12 @@ def get_card_by_id(card_id):
 # Update a card by card id (like_count, title, description) 
 @card_bp.route("/<card_id>", methods = ["PUT"])
 def update_card_by_id(card_id):
-    pass
+    card = validate_model(card_id)
+    request_body = validate_card_input(request.get_json())
+    card.message = request_body["message"]
+    db.session.commit()
+    message = f"Card message "
+    return 
 
 # Soumya
 # # Delete a card 
@@ -89,6 +96,17 @@ def validate_model(cls, model_id):
         return model
     abort(make_response({"message":f"{cls.__name__} with {model_id} not found"}, 404))
 
-# def validate_board_input(board_data):
-#     if "title" not in board_data \
-#         or 
+def validate_board_input(board_data):
+    if "title" not in board_data \
+        or board_data["title"] == "" \
+        or "owner" not in board_data \
+        or board_data["owner"] == "":
+        return abort(make_response(jsonify("Invalid request"), 400))
+    return board_data
+
+
+def validate_card_input(card_data):
+    if "message" not in card_data \
+        or card_data["message"] == "":
+        return abort(make_response(jsonify("Invalid request"), 400))
+    return card_data
