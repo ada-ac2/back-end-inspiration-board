@@ -5,9 +5,8 @@ from app.models.card import Card
 
 
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
-cards_bp = Blueprint("cards_bp", __name__, url_prefix="/cards")
 
-
+# Helper Functions
 def validate_request_and_create_entry(cls, request_data):
     try:
         new_obj = cls.from_dict(request_data)
@@ -15,6 +14,16 @@ def validate_request_and_create_entry(cls, request_data):
         key = str(e).strip("\'")
         abort(make_response(jsonify({"message": f"Request body must include {key}"}), 400))
     return new_obj
+
+def validate_model(cls, model_id):
+    try:
+        model_id = int(model_id)
+    except:
+        abort(make_response({"message" : f" {cls.__name__} {model_id} invalid."}, 400))
+    model = cls.query.get(model_id)
+    if model:
+        return model  
+    abort(make_response({"message" : f" {cls.__name__} {model_id} not found."}, 404))
 
 
 @boards_bp.route("", methods=["GET"])
@@ -35,24 +44,8 @@ def create_one_board():
 
     return new_board.to_dict(), 201
 
-
-# helper function 
-def validate_model(cls, model_id):
-    try:
-        model_id = int(model_id)
-    except:
-        abort(make_response({"message" : f" {cls.__name__} {model_id} invalid."}, 400))
-    
-    model = cls.query.get(model_id)
-    
-    if model:
-        return model
-        
-    abort(make_response({"message" : f" {cls.__name__} {model_id} not found."}, 404))
-
-
 # POST /board/<board_id>/cards
-@cards_bp.route("/<board_id>/cards", methods=["POST"])
+@boards_bp.route("/<board_id>/cards", methods=["POST"])
 def create_new_card_to_board(board_id):
     board = validate_model(Board, board_id)
     
@@ -66,7 +59,7 @@ def create_new_card_to_board(board_id):
     return make_response(new_card.to_dict(),200)
 
 # GET /board/<board_id>/cards
-@cards_bp.route("/<board_id>/cards", methods=["GET"])
+@boards_bp.route("/<board_id>/cards", methods=["GET"])
 def get_cards_by_board_id(board_id):
     board = validate_model(Board, board_id)
     
@@ -75,3 +68,15 @@ def get_cards_by_board_id(board_id):
         cards_response.append(card.to_dict())
     
     return make_response(jsonify(cards_response),200)
+
+@boards_bp.route("/<board_id>/cards/<card_id>", methods=["DELETE"])
+def delete_card_by_id(board_id, card_id):
+    board = validate_model(Board, board_id)
+    card = validate_model(Card, card_id)
+
+    db.session.delete(card)
+    db.session.commit()
+
+    return make_response(jsonify({"message": f"Card #{card.card_id} successfully deleted"}), 200)
+
+

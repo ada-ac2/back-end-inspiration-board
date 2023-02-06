@@ -21,6 +21,5 @@ class Board(db.Model):
         new_board = Board(
             title = request_data["title"],
             owner = request_data["owner"],
-            cards = request_data["cards"]
         )
         return new_board
