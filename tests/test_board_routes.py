@@ -1,5 +1,8 @@
 from operator import contains
+from werkzeug.exceptions import HTTPException
 from app.models.board import Board
+from app.models.card import Card
+import pytest
 
 BOARD_TITLE = "Favorite Quotes"
 BOARD_OWNER = "Talia"
@@ -71,3 +74,14 @@ def test_get_boards_one_saved_board(client, one_saved_board):
     assert response_body[0]["board_id"] == 1
     assert response_body[0]["title"] == BOARD_TITLE
     assert response_body[0]["owner"] == BOARD_OWNER
+    
+    
+
+
+##################
+# Test get_card  #
+##################
+
+#####################
+# Test delete_card  #
+#####################
