@@ -6,8 +6,21 @@ class Card(db.Model):
     message = db.Column(db.String, nullable=False)
     likes_count = db.Column(db.Integer, default=0)
     display_status = db.Column(db.Boolean, default=True)
-    # make sure of the name of the "backpopulates" in the board model
     board_id = db.Column(db.Integer, db.ForeignKey("board.id"))
     board = db.relationship("Board", back_populates="cards")
     
-    
+    @classmethod
+    def from_dict(cls, card_dict, board_id):
+        return Card(
+            message=card_dict["message"],
+            board_id=board_id,
+        )
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "message": self.message,
+            "likes_count": self.likes_count,
+            "display_status": self.display_status,
+            "board_id": self.board_id
+        }
