@@ -61,7 +61,7 @@ def test_get_one_board_by_id(client, two_saved_boards):
     assert response.status_code == 200
     board_list = response.get_json()
 
-    assert len(board_list) == 1    
+    assert len(board_list) == 4    
     assert board_list["id"] == 2
     assert board_list["title"] == "Testing Board Two"
     assert board_list["creator"] == "InspoBoardCheerUp New"

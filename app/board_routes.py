@@ -49,6 +49,11 @@ def validate_model(cls, model_id):
     
     return model
 
+@boards_bp.route("/<id>", methods=["GET"])
+def read_one_board(id):
+    board = validate_model(Board, id)
+    return board.to_dict()
+
 @boards_bp.route("/<id>", methods=["PUT"])
 def update_board(id):
     board = validate_model(Board, id)
