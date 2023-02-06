@@ -9,4 +9,5 @@ board_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
 @board_bp.route("", methods=["POST"])
 def create_board():
-    request_body = 
+    pass
+    #request_body = 
