@@ -10,3 +10,4 @@ class Card(db.Model):
     board_id = db.Column(db.Integer, db.ForeignKey("board.id"))
     board = db.relationship("Board", back_populates="cards")
     
+    
