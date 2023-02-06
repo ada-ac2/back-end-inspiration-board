@@ -21,5 +21,7 @@ class Board(db.Model):
         new_board = Board(
             title = request_data["title"],
             owner = request_data["owner"],
+            # I think we this for get and delete
+            cards = request_data["cards"]
         )
         return new_board
