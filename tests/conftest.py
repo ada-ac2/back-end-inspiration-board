@@ -1,6 +1,7 @@
 import pytest
 from app import create_app, db
-from app.models import Board, Card
+from app.models.board import Board
+from app.models.card import Card
 
 BOARD_TITLE = "Favorite Quotes"
 BOARD_OWNER = "Talia"
