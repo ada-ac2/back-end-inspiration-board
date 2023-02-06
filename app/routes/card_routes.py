@@ -3,7 +3,7 @@ from app.routes.helpers import validate_model, validate_request_body
 from app.models.card import Card
 from app import db
 
-cards_bp = Blueprint("cards_bp", __name__, url_prefix="cards")
+cards_bp = Blueprint("cards_bp", __name__, url_prefix="/cards")
 
 cards_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card(card_id):
@@ -38,7 +38,7 @@ required_data = ["message"]
 cards_bp.route("",methods=["POST"])
 def create_card():
     request_body = request.get_json(silent=True)
-    validate_request_body(request_body)
+    validate_request_body(request_body, required_data)
 
     new_card = Card(message=request_body["message"])
 
