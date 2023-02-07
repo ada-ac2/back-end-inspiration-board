@@ -20,7 +20,8 @@ class Board(db.Model):
 
     @classmethod
     def from_dict(cls, board_data):
-        new_board = Board(title = board_data["title"],
+        new_board = Board(title=board_data["title"],
                         owner=board_data["owner"])
+        return new_board
 
                     
