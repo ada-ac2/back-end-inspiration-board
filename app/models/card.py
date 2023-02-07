@@ -9,23 +9,23 @@ class Card(db.Model):
     board = db.relationship("Board", back_populates="cards")
     
 
-def to_dict(self):
-    card_dict = {
-        "card_id": self.card_id,
-        "board_id": self.board_id,
-        "message": self.message,
-        "likes_count": self.likes_count
-    }
-    
-    return card_dict
+    def to_dict(self):
+        card_dict = {
+            "card_id": self.card_id,
+            "board_id": self.board_id,
+            "message": self.message,
+            "likes_count": self.likes_count
+        }
+        
+        return card_dict
 
 
-@classmethod
-def from_dict(cls, card_data):
-    new_card = Card(
-                card_id = card_data["card_id"],
-                board_id = card_data["board_id"],
-                message = card_data["message"],
-                likes_count = card_data["likes_count"]
-                )
-    return new_card
+    @classmethod
+    def from_dict(cls, card_data):
+        new_card = Card(
+                    # card_id = card_data["card_id"],
+                    board_id = card_data["board_id"],
+                    message = card_data["message"],
+                    likes_count = card_data["likes_count"]
+                    )
+        return new_card
