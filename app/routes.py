@@ -30,14 +30,16 @@ def create_board():
 # Add a card to a board by board id 
 @board_bp.route("/<board_id>/card", methods = ["POST"])
 def add_card_to_board(board_id):
-    board = validate_model(Board, board_id)
+    validate_model(Board, board_id)
     request_body = request.get_json()
-    new_card = Card.from_dict(request_body)
-    new_card.board = board
+    try:
+        new_card = Card.from_dict(request_body)
+    except KeyError as key_error:
+        abort(make_response({"message": f"Bad request: {key_error.args[0]} attribute is missing"}, 400))
     db.session.add(new_card)
     db.session.commit()
 
-    return make_response(jsonify(f"Card {new_card.card_id} in {new_card.board.title} successfully created"))
+    return make_response(jsonify(new_card.to_dict()), 201)
 
 # Read a board by its id, display all cards underneath 
 @board_bp.route("/<board_id>/cards", methods = ["GET"])
