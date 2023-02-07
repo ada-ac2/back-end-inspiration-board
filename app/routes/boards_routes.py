@@ -15,7 +15,7 @@ def create_board():
     new_board = Board.from_dict(request_body)
     db.session.add(new_board)
     db.session.commit()
-    return new_board.to_dict(), 201
+    return new_board.to_dict()
 
 @board_bp.route("", methods=["GET"])
 def get_boards():
@@ -32,7 +32,7 @@ def read_one_board(board_id):
     board = validate_model(Board, board_id)
     if not board.status:
         abort(make_response({"details": "This board is archived"}, 400))
-    return board.to_dict(), 201
+    return board.to_dict()
 
 @board_bp.route("/<board_id>", methods=["PUT"])
 def update_board(board_id):
@@ -43,7 +43,7 @@ def update_board(board_id):
     board.owner = request_body["owner"]
     db.session.commit()
     db.session.refresh(board)
-    return board.to_dict(), 201
+    return board.to_dict()
 
 @board_bp.route("/<board_id>", methods=["DELETE"])
 def delete_board(board_id):
@@ -54,7 +54,7 @@ def delete_board(board_id):
         card.status = False
     board.status = False
     db.session.commit()
-    return board.to_dict(), 200
+    return board.to_dict()
 
 @board_bp.route("/<board_id>", methods=["PATCH"])
 def patch_board(board_id):
@@ -63,4 +63,4 @@ def patch_board(board_id):
     board = validate_and_set_attribute(board, request_body)
     db.session.commit()
     db.session.refresh(board)
-    return board.to_dict(), 201
+    return board.to_dict()
