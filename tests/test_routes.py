@@ -46,6 +46,30 @@ CARD_SIX_ID = 6
 
 # Tests for Board routes
 # POST / create Board
+def test_create_board_valid_input(client):
+    response = client.post("/boards", json = {
+        "title":"Happy thoughts!",
+        "owner":"Dreamer",
+        "cards":[]
+    })
+    response_body = response.get_json()
+    #Assert
+    assert response.status_code == 201
+    assert response_body == {
+        "title":"Happy thoughts!",
+        "owner":"Dreamer",
+        "cards":[]
+    }
+
+def test_create_board_invalid_input(client):
+    response = client.post("/boards", json = {
+        "title":"",
+        "owner":"",
+        "cards":[]
+    })
+    response_body = response.get_json()
+    #Assert
+    assert response.status_code == 400
 
 # GET all boards
 def test_get_all_boards_with_no_boards_returns_empty_list(client):
@@ -164,6 +188,85 @@ def test_get_all_cards_by_no_board_returns_error(client):
     
     assert response.status_code == 404
 
+# POST card to the board by board_id
+def test_add_card_to_board_with_valid_board_id_valid_input_201(client, one_board_without_cards):
+    board_id = 1
+    response = client.post(f"/boards/{board_id}/cards", json = {
+        "message": "Smile! :)",
+        "likes_count": 0,
+        "board_id": 1
+    })
+    response_body = response.get_json()
+    #Assert
+    assert response.status_code == 201
+    assert response_body == {
+        "card_id": 1,
+        "board_id": 1,
+        "message": "Smile! :)",
+        "likes_count": 0
+    }
+
+def test_add_card_to_board_with_valid_board_id_invalid_input_400(client, one_board_without_cards):
+    board_id = 1
+    response = client.post(f"/boards/{board_id}/cards", json = {
+        "message": "",
+        "likes_count": 0,
+        "board_id": 1
+    })
+    response_body = response.get_json()
+    #Assert
+    assert response.status_code == 400
+
+def test_add_card_to_board_with_invalid_board_id_return_400(client, one_board_without_cards):
+    board_id = "hello"
+    response = client.post(f"/boards/{board_id}/cards", json = {
+        "message": "Smile! :)",
+        "likes_count": 0,
+        "board_id": 3
+    })
+    response_body = response.get_json()
+    #Assert
+    assert response.status_code == 400
+
+def test_add_card_to_board_with_not_existing_board_id_return_404(client, one_board_without_cards):
+    board_id = 3
+    response = client.post(f"/boards/{board_id}/cards", json = {
+        "message": "Smile! :)",
+        "likes_count": 0,
+        "board_id": 3
+    })
+    response_body = response.get_json()
+    #Assert
+    assert response.status_code == 404
+
+# DELETE a board
+def test_delete_existing_board(client, one_board,two_board, three_board, one_card,two_card, three_card,four_card,five_card, six_card ):
+    # Act 
+    response = client.delete("/boards/1")
+    response_body = response.get_json()
+
+    # Assert 
+    assert response.status_code  == 200
+    assert response_body == "Board #1 successfully deleted"
+    
+def test_delete_missing_board(client, one_board,two_board, three_board, one_card,two_card, three_card,four_card,five_card, six_card ):
+    # Act 
+    response = client.delete("/boards/9")
+    response_body = response.get_json()
+
+    # Assert 
+    assert response.status_code  == 404
+    assert response_body == {"message": "Board 9 not found"}
+
+def test_delete_board_invalid_id(client, one_board,two_board, three_board, one_card,two_card, three_card,four_card,five_card, six_card):
+    # Act
+    response = client.delete("/boards/invalid")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body == {"message": "invalid invalid"}
+
 # Tests for Card routes
 # GET all cards ???
 
@@ -181,11 +284,9 @@ def test_get_one_card_by_id(client,one_board,two_board, three_board, one_card,tw
     assert response_body["board_id"] == CARD_ONE_BOARD
     assert response_body["likes_count"] == CARD_ONE_LIKES
 
-
 def test_no_such_card_returns_error(client):
     response_one = client.get('/cards/1')
     assert response_one.status_code == 404
-
 
 # UPDATE card by id
 def test_update_card_by_existed_id_returns_card_info(client, one_board_with_one_card):

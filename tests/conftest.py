@@ -149,6 +149,17 @@ def list_three_boards_with_cards(app):
     db.session.commit()
 
 @pytest.fixture
+def one_board_without_cards(app):
+    first_board = Board(
+        title = BOARD_TITLE_ONE,
+        owner = BOARD_OWNER_ONE,
+        cards = [])
+
+    db.session.add(first_board)
+    db.session.commit()
+    db.session.refresh(first_board, ["board_id"])
+
+@pytest.fixture
 def one_board_with_one_card(app):
     first_card = Card(
         message = CARD_ONE_MESSAGE,

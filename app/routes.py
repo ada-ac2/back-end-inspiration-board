@@ -11,11 +11,12 @@ board_bp = Blueprint("board_bp", __name__, url_prefix="/boards")
 # Add a board 
 @board_bp.route("", methods = ["POST"])
 def create_board():
-    request_body = request.get_json()
-    try:
-        new_board = Board.from_dict(request_body)
-    except KeyError as key_error:
-        abort(make_response({"message": f"Bad request: {key_error.args[0]} attribute is missing"}, 400))
+    board_data = validate_board_input(request.get_json())
+    new_board = Board.from_dict(board_data)
+    # try:
+    #     new_board = Board.from_dict(request_body)
+    # except KeyError as key_error:
+    #     abort(make_response({"message": f"Bad request: {key_error.args[0]} attribute is missing"}, 400))
 
     db.session.add(new_board)
     db.session.commit()
@@ -27,19 +28,20 @@ def create_board():
             }), 201)
 
 # Add a card to a board by board id 
-@board_bp.route("/<board_id>/card", methods = ["POST"])
+@board_bp.route("/<board_id>/cards", methods = ["POST"])
 def add_card_to_board(board_id):
-    validate_model(Board, board_id)
-    request_body = request.get_json() 
-    try:
-        new_card = Card.from_dict(request_body)
-    except KeyError as key_error:
-        abort(make_response({"message": f"Bad request: {key_error.args[0]} attribute is missing"}, 400))
-
+    board = validate_model(Board, board_id)
+    card_data = validate_card_input(request.get_json())
+    new_card = Card.from_dict(card_data)
+    new_card.board_id = board.board_id
+    # try:
+    #     new_card = Card.from_dict(request_body)
+    # except KeyError as key_error:
+    #     abort(make_response({"message": f"Bad request: {key_error.args[0]} attribute is missing"}, 400))
     db.session.add(new_card)
     db.session.commit()
 
-    return make_response(jsonify(new_card.to_dict()), 201) 
+    return make_response(jsonify(new_card.to_dict()), 201)
 
 # Read a board by its id, display all cards underneath 
 @board_bp.route("/<board_id>/cards", methods = ["GET"])
@@ -88,7 +90,8 @@ def get_card_by_id(card_id):
     card = validate_model(Card, card_id)
     return make_response(jsonify(card.to_dict()), 200)
 
-# Update a card by card id (like_count, title, description) 
+#Kate
+# Update a card by card id (like_count, message) 
 @card_bp.route("/<card_id>", methods = ["PUT"])
 def update_card_by_id(card_id):
     card = validate_model(Card, card_id)
