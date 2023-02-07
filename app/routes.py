@@ -48,10 +48,13 @@ def create_one_board():
 @boards_bp.route("/<board_id>/cards", methods=["POST"])
 def create_new_card_to_board(board_id):
     board = validate_model(Board, board_id)
-    
     card_data = request.get_json()
-    new_card = Card.from_dict(card_data)
-    # new_card[board_id] = board.board_id
+    card_data["board_id"] = board.board_id
+    try:
+        new_card = Card.from_dict(card_data)
+    except KeyError as e:
+        key = str(e).strip("\'")
+        abort(make_response(jsonify({"message": f"Request body must include {key}"}), 400))
     
     db.session.add(new_card)
     db.session.commit()
@@ -69,7 +72,6 @@ def get_cards_by_board_id(board_id):
     
     return make_response(jsonify(cards_response),200)
 
-
 # DELETE /board/<board_id>/cards
 @boards_bp.route("/<board_id>/cards/<card_id>", methods=["DELETE"])
 def delete_card_by_id(board_id, card_id):
@@ -85,4 +87,13 @@ def delete_card_by_id(board_id, card_id):
 
     return make_response(jsonify({"message": f"Card #{card.card_id} successfully deleted"}), 200)
 
+@boards_bp.route("/<board_id>/cards/<card_id>", methods=["PUT"])
+def add_like_to_card(board_id, card_id):
+    board = validate_model(Board, board_id)
+    card = validate_model(Card, card_id)
+    card.likes_count += 1
 
+    db.session.add(card)
+    db.session.commit
+
+    return make_response(jsonify({"message": f"Card #{card.card_id} now has {card.likes_count} likes"}), 200)

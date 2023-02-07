@@ -150,11 +150,26 @@ def test_add_one_card_nonexistent_board_id(client, two_saved_boards):
     assert response_body == {'message': ' Board 3 not found.'}
 
 
-def test_add_one_card_must_include_message():
-    pass
+def test_add_one_card_must_include_message(client, two_saved_boards):
+    # Act
+    response = client.post("/boards/1/cards",json = {
+        "board_id": 3,
+        "likes_count": 0
+    })
+    response_body = response.get_json()
+    
+    # Assert
+    assert response.status_code == 400
+    assert response_body == {"message": "Request body must include message"}
 
-def test_update_likes_on_card():
-    pass
+def test_update_likes_on_card(client, add_one_card_to_id_2):
+    # Act
+    response = client.put("/boards/2/cards/1")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert response_body == {"message": "Card #1 now has 3 likes"}
 
 def test_delete_one_card(client, one_saved_card):
     # Act 
