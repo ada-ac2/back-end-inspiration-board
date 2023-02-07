@@ -2,7 +2,7 @@ import pytest
 from app.models.board import Board
 from app.routes.helpers import validate_model
 
-def test_to_dict_no_miss_date():
+def test_to_dict_no_miss_data():
     test_data = Board(id = 1,
                 title = "Hello",
                 owner = "World",)

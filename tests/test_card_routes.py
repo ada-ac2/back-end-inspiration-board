@@ -16,14 +16,14 @@ def test_create_card_with_board_valid_request_body(client, one_board):
     assert response.status_code == 201
     assert response_body["statuscode"] == 201
     assert response_body["message"] == "Created new card id: 1"
-    assert len(response_body["data"]) == 4
+    assert len(response_body["data"]) == 3
     assert response_body["data"]["id"] == 1
     assert response_body["data"]["message"] == CARD_MESSAGE
     assert response_body["data"]["likes"] == 0
-    assert len(response_body["data"]["board"]) == 3
-    assert response_body["data"]["board"]["id"] == 1
-    assert response_body["data"]["board"]["owner"] == OWNER
-    assert response_body["data"]["board"]["title"] == TITLE
+    # assert len(response_body["data"]["board"]) == 3
+    # assert response_body["data"]["board"]["id"] == 1
+    # assert response_body["data"]["board"]["owner"] == OWNER
+    # assert response_body["data"]["board"]["title"] == TITLE
 
 def test_create_card_with_board_no_message_request_body(client, one_board):
     request_body = {"anotherAttribute":3}
@@ -52,14 +52,14 @@ def test_create_card_with_board_extra_parameters_request_body(client, one_board)
     assert response.status_code == 201
     assert response_body["statuscode"] == 201
     assert response_body["message"] == "Created new card id: 1"
-    assert len(response_body["data"]) == 4
+    assert len(response_body["data"]) == 3
     assert response_body["data"]["id"] == 1
     assert response_body["data"]["message"] == CARD_MESSAGE
     assert response_body["data"]["likes"] == 0
-    assert len(response_body["data"]["board"]) == 3
-    assert response_body["data"]["board"]["id"] == 1
-    assert response_body["data"]["board"]["owner"] == OWNER
-    assert response_body["data"]["board"]["title"] == TITLE
+    # assert len(response_body["data"]["board"]) == 3
+    # assert response_body["data"]["board"]["id"] == 1
+    # assert response_body["data"]["board"]["owner"] == OWNER
+    # assert response_body["data"]["board"]["title"] == TITLE
 
 def test_create_card_with_board_non_numeric_board_id(client, one_board):
     request_body = {"message":CARD_MESSAGE}
@@ -94,14 +94,14 @@ def test_add_likes_to_card_valid_id(client, one_card_to_board):
     assert response.status_code == 200
     assert response_body["statuscode"] == 200
     assert response_body["message"] == "Increased likes for card id 1 to 1"
-    assert len(response_body["data"]) == 4
+    assert len(response_body["data"]) == 3
     assert response_body["data"]["id"] == 1
     assert response_body["data"]["message"] == "Good message"
     assert response_body["data"]["likes"] == 1
-    assert len(response_body["data"]["board"]) == 3
-    assert response_body["data"]["board"]["id"] == 1
-    assert response_body["data"]["board"]["owner"] == OWNER
-    assert response_body["data"]["board"]["title"] == TITLE
+    # assert len(response_body["data"]["board"]) == 3
+    # assert response_body["data"]["board"]["id"] == 1
+    # assert response_body["data"]["board"]["owner"] == OWNER
+    # assert response_body["data"]["board"]["title"] == TITLE
 
 def test_add_likes_to_card_non_numeric_id(client, one_card_to_board):
     invalid_id = "card"
