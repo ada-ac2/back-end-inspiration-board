@@ -38,7 +38,13 @@ def read_all_boards():
     for board in boards:
         board_response.append(board.to_dict())
 
-    return make_response(jsonify(board_response), 200)
+    response_obj = {
+        "statuscode": 200,
+        "message": "All boards showing below.",
+        "data": board_response
+    }
+
+    return make_response(jsonify(response_obj), 200)
 
 #get one board by id and return cards 
 @boards_bp.route("/<board_id>", methods = ["GET"])
