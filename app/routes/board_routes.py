@@ -19,8 +19,13 @@ def create_board():
     db.session.add(new_board)
     db.session.commit()
 
+    response_obj = {
+        "statuscode":201,
+        "message": f"Board: {new_board.title} created successfully.",
+        "data": new_board.to_dict()
+    }
     #return response message or return the title by itself
-    return make_response(jsonify(f"Board: {new_board.title} created successfully."), 201)
+    return make_response(jsonify(response_obj), 201)
     
 #get list of all boards
 @boards_bp.route("", methods = ["GET"])
@@ -50,7 +55,11 @@ def delete_one_board_by_id(board_id):
     db.session.delete(board)
     db.session.commit()
 
-    return make_response(jsonify(f"Board {board_id} has been deleted successfully."), 200)
+    response_obj = {
+        "statuscode": 200,
+        "message": f"Board {board_id} has been deleted successfully."
+    }
+    return make_response(jsonify(response_obj), 200)
 
 @boards_bp.route("/<board_id>/cards", methods=["POST"])
 def create_card_to_board(board_id):
