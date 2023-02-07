@@ -8,6 +8,7 @@ class Board(db.Model):
     title = db.Column(db.String(45), nullable=False)
     owner = db.Column(db.String(45), nullable=False)
     status = db.Column(db.Boolean, default=True)
+    selected = db.Column(db.Boolean, default=False)
     # foreign key associate to Card table
     cards = db.relationship("Card", back_populates="board")
 
@@ -17,6 +18,7 @@ class Board(db.Model):
         board_as_dict["title"] = self.title
         board_as_dict["owner"] = self.owner
         board_as_dict["status"] = self.status
+        board_as_dict["selected"] = self.selected
         return board_as_dict
     
     @classmethod
