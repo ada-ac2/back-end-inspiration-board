@@ -50,8 +50,8 @@ def create_new_card_to_board(board_id):
     board = validate_model(Board, board_id)
     
     card_data = request.get_json()
+    card_data[board_id] = board.board_id
     new_card = Card.from_dict(card_data)
-    new_card[board_id] = board.board_id
     
     db.session.add(new_card)
     db.session.commit()
