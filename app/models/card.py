@@ -21,15 +21,11 @@ class Card(db.Model):
         return card_dict
 
 
-    @classmethod
-    def from_dict(cls, card_data):
-        new_card = Card(
-<<<<<<< HEAD
-                    # card_id = card_data["card_id"],
-=======
->>>>>>> b33461c3a3f7305938657545733d86e16ca91b54
-                    board_id = card_data["board_id"],
-                    message = card_data["message"],
-                    likes_count = card_data["likes_count"]
-                    )
-        return new_card
+@classmethod
+def from_dict(cls, card_data):
+    new_card = Card(
+                board_id = card_data["board_id"],
+                message = card_data["message"],
+                likes_count = card_data["likes_count"]
+                )
+    return new_card
