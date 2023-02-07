@@ -4,7 +4,6 @@ class Board(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String)
     creator = db.Column(db.String)
-
     cards = db.relationship("Card",back_populates="board")
 
     def to_dict(self):
