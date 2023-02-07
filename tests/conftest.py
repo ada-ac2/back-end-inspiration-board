@@ -56,3 +56,9 @@ def add_one_card_to_board_one_and_one_card_to_board_two(app, add_two_boards):
     db.session.commit 
 
     return [card_1, card_2]
+
+@pytest.fixture
+def archive_one_card(app, add_two_cards_to_board_one):
+    card_one = Card.query.get(1)
+    card_one.status = False
+    db.session.commit
