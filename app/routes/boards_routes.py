@@ -35,14 +35,17 @@ def read_one_board(board_id):
 
 @board_bp.route("/<board_id>", methods=["PUT"])
 def update_board(board_id):
-    board = validate_model(board, board_id)
+    board = validate_model(Board, board_id)
     request_body = request.get_json()
     validate_board(request_body)
-    board = Board.from_dict(request_body)
+    board.title = request_body["title"]
+    board.owner = request_body["owner"]
     db.session.commit()
     db.session.refresh(board)
     return board.to_dict()
 
+"""
+currently not working, will test again when i pull card models
 @board_bp.route("/<board_id>", methods=["DELETE"])
 def delete_board(board_id):
     board = validate_model(Board, board_id)
@@ -53,7 +56,7 @@ def delete_board(board_id):
     board.status = False
     db.session.commit()
     return board.to_dict(), 200
-
+"""
 @board_bp.route("/<board_id>", methods=["PATCH"])
 def patch_board(board_id):
     board = validate_model(Board, board_id)
