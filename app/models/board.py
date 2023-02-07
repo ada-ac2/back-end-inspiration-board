@@ -1,4 +1,6 @@
 from app import db
+# needed to establish one-to-many relationship
+from sqlalchemy.orm import relationship
 
 
 class Board(db.Model):

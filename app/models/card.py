@@ -1,4 +1,6 @@
 from app import db
+# needed to establish one-to-many relationship
+from sqlalchemy.orm import relationship
 
 class Card(db.Model):
     card_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
