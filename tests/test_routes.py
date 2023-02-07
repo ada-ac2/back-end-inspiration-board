@@ -46,7 +46,17 @@ CARD_SIX_ID = 6
 
 # Tests for Board routes
 # POST / create Board
+
 # GET all boards
+def test_get_all_boards_with_no_boards_returns_empty_list(client):
+    response = client.get("/boards")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert len(response_body) == 0
+    assert response_body == []
+
 def test_get_all_boards_with_no_cards_returns_boards_info(client, list_three_boards_without_cards):
     response = client.get("/boards")
     response_body = response.get_json()
@@ -178,6 +188,39 @@ def test_no_such_card_returns_error(client):
 
 
 # UPDATE card by id
+def test_update_card_by_existed_id_returns_card_info(client, one_board_with_one_card):
+    card_id = 1
+    response = client.put(f"/cards/{card_id}", json = {
+        "message": "Great Achievements Begin With Small Steps",
+        "likes_count": 2,
+        "board_id": 1
+    })
+    response_body = response.get_json()
+    # Assert
+    assert response.status_code == 200
+    assert response_body == f"Card {card_id} successfully updated"
+
+def test_update_card_by_invalid_id_returns_400(client, one_board_with_one_card):
+    response = client.put(f"/cards/hello", json = {
+        "message": "Great Achievements Begin With Small Steps",
+        "likes_count": 2,
+        "board_id": 1
+    })
+    response_body = response.get_json()
+    # Assert
+    assert response.status_code == 400
+    assert response_body == {"message": "hello invalid"}
+
+def test_update_card_by_invalid_id_returns_404(client, one_board_with_one_card):
+    response = client.put(f"/cards/5", json = {
+        "message": "Great Achievements Begin With Small Steps",
+        "likes_count": 2,
+        "board_id": 1
+    })
+    response_body = response.get_json()
+    # Assert
+    assert response.status_code == 404
+    assert response_body == {"message": "Card 5 not found"}
 
 # DELETE a card
 def test_delete_existing_card(client, one_board,two_board, three_board, one_card,two_card, three_card,four_card,five_card, six_card ):
