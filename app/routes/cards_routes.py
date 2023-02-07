@@ -29,7 +29,7 @@ def create_card(board_id):
     if "message" not in request_body:
         abort(make_response({"message":"a message must be included to add a card"}, 400))
 
-    new_card = Card.from_dict(request_body, board_id, board)
+    new_card = Card.from_dict(request_body, board_id)
     db.session.add(new_card)
     db.session.commit()
     return make_response({"message":f"Card #{new_card.id} successfully added to {board.title} board"}, 201)
@@ -60,9 +60,10 @@ def like_card(board_id, card_id):
 @cards_bp.route("", methods=["GET"])
 def get_all_cards(board_id):
     board = validate_model(Board, board_id)
-    all_cards_in_board = Card.query.filter(Card.status == True).all()
+    all_cards_in_board = Card.query.filter(Card.status == True, Card.board_id == board_id).all()
     cards_response = []
     for card in all_cards_in_board:
+        # print(card.board.title)
         cards_response.append(card.to_dict())
 
     return jsonify(cards_response), 200
