@@ -45,19 +45,17 @@ def update_board(board_id):
     db.session.refresh(board)
     return board.to_dict(), 201
 
-"""
-currently not working, will test again when i pull card models
 @board_bp.route("/<board_id>", methods=["DELETE"])
 def delete_board(board_id):
     board = validate_model(Board, board_id)
     # if a board is deleted, this board and its associated cards will be archived
-    cards = board.cards.query.all()
+    cards = db.session.query(Board.cards).all()
     for card in cards:
         card.status = False
     board.status = False
     db.session.commit()
     return board.to_dict(), 200
-"""
+
 @board_bp.route("/<board_id>", methods=["PATCH"])
 def patch_board(board_id):
     board = validate_model(Board, board_id)
