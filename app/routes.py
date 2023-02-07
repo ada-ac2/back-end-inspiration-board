@@ -30,7 +30,14 @@ def create_board():
 # Add a card to a board by board id 
 @board_bp.route("/<board_id>/card", methods = ["POST"])
 def add_card_to_board(board_id):
-    pass
+    board = validate_model(Board, board_id)
+    request_body = request.get_json()
+    new_card = Card.from_dict(request_body)
+    new_card.board = board
+    db.session.add(new_card)
+    db.session.commit()
+
+    return make_response(jsonify(f"Card {new_card.card_id} in {new_card.board.title} successfully created"))
 
 # Read a board by its id, display all cards underneath 
 @board_bp.route("/<board_id>/cards", methods = ["GET"])
