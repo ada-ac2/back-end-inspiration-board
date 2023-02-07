@@ -83,6 +83,13 @@ def add_new_card_to_board(id):
     board = validate_model(Board, id)
 
     request_body = request.get_json()
+
+    if "message" not in request_body:
+        abort(make_response({"message":"a message must be included to add a card"}, 400))
+   
+    if len(request_body["message"]) > 40:
+        abort(make_response({"message":"a message must be less than or equal to 40 characters"}, 400))
+
     new_card = Card.from_dict(request_body)
     new_card.board = board
 
@@ -91,6 +98,7 @@ def add_new_card_to_board(id):
 
     message = f"Card {new_card.message} created with Board{board.title}"
     return make_response(jsonify(message), 201)
+
 # Get all Cards for the board with id
 @boards_bp.route("/<id>/cards", methods=["GET"])
 def get_all_cards_for_board(id):
