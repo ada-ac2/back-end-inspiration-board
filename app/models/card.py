@@ -10,11 +10,10 @@ class Card(db.Model):
     board = db.relationship("Board", back_populates="cards")
     
     @classmethod
-    def from_dict(cls, card_dict, board_id, board):
+    def from_dict(cls, card_dict, board_id):
         return Card(
             message=card_dict["message"],
             board_id=board_id,
-            board=board
         )
 
     def to_dict(self):
