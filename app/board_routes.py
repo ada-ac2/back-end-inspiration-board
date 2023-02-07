@@ -9,6 +9,14 @@ boards_bp = Blueprint("boards_bp", __name__, url_prefix="/boards")
 @boards_bp.route("", methods=["POST"])
 def create_Board():
     request_body = request.get_json()
+
+    if "title" not in request_body or len(request_body["title"]) == 0:
+        abort(make_response({"message":"A title must be included to add a board"}, 400))
+
+    if "creator" not in request_body or len(request_body["creator"]) == 0:
+        abort(make_response({"message":"A creator must be included to add a board"}, 400))
+
+
     new_board = Board.from_dict(request_body)
 
     db.session.add(new_board)
@@ -84,7 +92,7 @@ def add_new_card_to_board(id):
 
     request_body = request.get_json()
 
-    if "message" not in request_body:
+    if "message" not in request_body or len(request_body["message"]) == 0:
         abort(make_response({"message":"a message must be included to add a card"}, 400))
    
     if len(request_body["message"]) > 40:
@@ -96,7 +104,7 @@ def add_new_card_to_board(id):
     db.session.add(new_card)
     db.session.commit()
 
-    message = f"Card {new_card.message} created with Board{board.title}"
+    message = f"Card {new_card.message} created with Board {board.title}"
     return make_response(jsonify(message), 201)
 
 # Get all Cards for the board with id
@@ -109,4 +117,16 @@ def get_all_cards_for_board(id):
         cards_response.append(card.to_dict())
 
     return jsonify(cards_response)
+
+
+# delete a card from the board with id 
+@boards_bp.route("/<board_id>/cards/<card_id>", methods=["DELETE"])
+def delete_card(board_id, card_id):
+    board = validate_model(Board, board_id)
+    card = validate_model(Card, card_id)
+
+    db.session.delete(card)
+    db.session.commit()
+
+    return make_response(f"Card #{card_id} in Board #{board_id} successfully deleted")
 
