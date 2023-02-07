@@ -18,7 +18,7 @@ class Board(db.Model):
     @classmethod
     def from_dict(cls, request_data):
         new_board= Board(
-            title=request_data["title"],
-            owner=request_data["owner"]
+            title=request_data[0]["title"],
+            owner=request_data[0]["owner"]
         )
         return new_board
