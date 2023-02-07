@@ -49,7 +49,7 @@ def update_board(board_id):
 def delete_board(board_id):
     board = validate_model(Board, board_id)
     # if a board is deleted, this board and its associated cards will be archived
-    cards = db.session.query(Board.cards).all()
+    cards = board.cards
     for card in cards:
         card.status = False
     board.status = False
