@@ -17,15 +17,10 @@ class Card(db.Model):
             "message": self.message,
             "likes_count": self.likes_count
         }
-<<<<<<< HEAD
-        return card_dict
-
-=======
         
         return card_dict
 
 
->>>>>>> b33461c3a3f7305938657545733d86e16ca91b54
     @classmethod
     def from_dict(cls, card_data):
         new_card = Card(
