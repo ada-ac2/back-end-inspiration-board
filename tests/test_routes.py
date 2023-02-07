@@ -164,6 +164,34 @@ def test_get_all_cards_by_no_board_returns_error(client):
     
     assert response.status_code == 404
 
+# DELETE a board
+def test_delete_existing_board(client, one_board,two_board, three_board, one_card,two_card, three_card,four_card,five_card, six_card ):
+    # Act 
+    response = client.delete("/boards/1")
+    response_body = response.get_json()
+
+    # Assert 
+    assert response.status_code  == 200
+    assert response_body == "Board #1 successfully deleted"
+    
+def test_delete_missing_board(client, one_board,two_board, three_board, one_card,two_card, three_card,four_card,five_card, six_card ):
+    # Act 
+    response = client.delete("/boards/9")
+    response_body = response.get_json()
+
+    # Assert 
+    assert response.status_code  == 404
+    assert response_body == {"message": "Board 9 not found"}
+
+def test_delete_board_invalid_id(client, one_board,two_board, three_board, one_card,two_card, three_card,four_card,five_card, six_card):
+    # Act
+    response = client.delete("/boards/invalid")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body == {"message": "invalid invalid"}
+
 # Tests for Card routes
 # GET all cards ???
 
