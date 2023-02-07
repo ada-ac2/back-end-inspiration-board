@@ -13,17 +13,17 @@ board_bp = Blueprint("board_bp", __name__, url_prefix="/boards")
 @board_bp.route("", methods = ["POST"])
 def create_board():
     request_body = request.get_json()
-    new_board = Board(
-        title = request_body["title"],
-        owner = request_body["owner"])
+    try:
+        new_board = Board.from_dict(request_body)
+    except KeyError as key_error:
+        abort(make_response({"message": f"Bad request: {key_error.args[0]} attribute is missing"}, 400))
     db.session.add(new_board)
     db.session.commit()
-    
     return make_response(
         jsonify({
                 "title" : new_board.title,
-                "owner" : new_board.owner 
-            }), 200)
+                "owner" : new_board.owner
+            }), 201)
 
 # Monica
 # Add a card to a board by board id 
