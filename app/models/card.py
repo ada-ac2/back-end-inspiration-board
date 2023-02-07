@@ -16,4 +16,3 @@ class Card(db.Model):
 
         return card_as_dict
 
-   
