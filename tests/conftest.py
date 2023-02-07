@@ -148,6 +148,21 @@ def list_three_boards_with_cards(app):
     db.session.add_all([first_board, second_board, third_board])
     db.session.commit()
 
+@pytest.fixture
+def one_board_with_one_card(app):
+    first_card = Card(
+        message = CARD_ONE_MESSAGE,
+        likes_count = CARD_ONE_LIKES,
+        board_id = CARD_ONE_BOARD)
+    
+    first_board = Board(
+        title = BOARD_TITLE_ONE,
+        owner = BOARD_OWNER_ONE,
+        cards = [first_card]
+    )
+    db.session.add(first_board)
+    db.session.commit()
+
 @pytest.fixture()
 def one_card(app):
     new_card = Card(

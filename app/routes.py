@@ -22,8 +22,9 @@ def create_board():
     return make_response(
         jsonify({
                 "title" : new_board.title,
-                "owner" : new_board.owner
-            }), 201)
+                "owner" : new_board.owner,
+                "cards": [] 
+            }), 200)
 
 # Monica
 # Add a card to a board by board id 
@@ -40,7 +41,7 @@ def get_cards_by_board_id(board_id):
         cards.append(card.to_dict())
     return make_response(jsonify(cards), 200)
 
-#MEGAN FOR TEST    
+
 # Get all board names, id, owner 
 @board_bp.route("", methods = ["GET"])
 def get_all_boards():
@@ -82,11 +83,14 @@ def get_card_by_id(card_id):
 # Update a card by card id (like_count, title, description) 
 @card_bp.route("/<card_id>", methods = ["PUT"])
 def update_card_by_id(card_id):
-    card = validate_model(card_id)
+    card = validate_model(Card, card_id)
     request_body = validate_card_input(request.get_json())
     card.message = request_body["message"]
+    card.likes_count = request_body["likes_count"]
+    card.board_id = request_body["board_id"]
+
     db.session.commit()
-    message = "Card message updated."
+    message = f"Card {card_id} successfully updated"
     return make_response(jsonify(message), 200)
 
 # Soumya
@@ -117,7 +121,6 @@ def validate_board_input(board_data):
         or board_data["owner"] == "":
         return abort(make_response(jsonify("Invalid request"), 400))
     return board_data
-
 
 def validate_card_input(card_data):
     if "message" not in card_data \
