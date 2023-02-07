@@ -14,7 +14,7 @@ class Board(db.Model):
 
         card_list = []
         for card in self.cards:
-            card_list.append(card.message)
+            card_list.append(card.to_dict())
         board_as_dict["cards"] = card_list
 
         return board_as_dict

@@ -13,11 +13,11 @@ class Card(db.Model):
             "message": self.message,
             "likes": self.likes
         }
-        if self.board:
-            card_dict["board"] = {
-                "id": self.board.id,
-                "title": self.board.title,
-                "owner": self.board.owner
-            }
+        # if self.board:
+        #     card_dict["board"] = {
+        #         "id": self.board.id,
+        #         "title": self.board.title,
+        #         "owner": self.board.owner
+        #     }
 
         return card_dict
