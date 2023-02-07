@@ -46,6 +46,30 @@ CARD_SIX_ID = 6
 
 # Tests for Board routes
 # POST / create Board
+def test_create_board_valid_input(client):
+    response = client.post("/boards", json = {
+        "title":"Happy thoughts!",
+        "owner":"Dreamer",
+        "cards":[]
+    })
+    response_body = response.get_json()
+    #Assert
+    assert response.status_code == 201
+    assert response_body == {
+        "title":"Happy thoughts!",
+        "owner":"Dreamer",
+        "cards":[]
+    }
+
+def test_create_board_invalid_input(client):
+    response = client.post("/boards", json = {
+        "title":"",
+        "owner":"",
+        "cards":[]
+    })
+    response_body = response.get_json()
+    #Assert
+    assert response.status_code == 400
 
 # GET all boards
 def test_get_all_boards_with_no_boards_returns_empty_list(client):

@@ -12,11 +12,13 @@ board_bp = Blueprint("board_bp", __name__, url_prefix="/boards")
 # Add a board 
 @board_bp.route("", methods = ["POST"])
 def create_board():
-    request_body = request.get_json()
-    try:
-        new_board = Board.from_dict(request_body)
-    except KeyError as key_error:
-        abort(make_response({"message": f"Bad request: {key_error.args[0]} attribute is missing"}, 400))
+    board_data = validate_board_input(request.get_json())
+    new_board = Board.from_dict(board_data)
+    # try:
+    #     new_board = Board.from_dict(request_body)
+    # except KeyError as key_error:
+    #     abort(make_response({"message": f"Bad request: {key_error.args[0]} attribute is missing"}, 400))
+
     db.session.add(new_board)
     db.session.commit()
     return make_response(
@@ -24,7 +26,7 @@ def create_board():
                 "title" : new_board.title,
                 "owner" : new_board.owner,
                 "cards": [] 
-            }), 200)
+            }), 201)
 
 # Monica
 # Add a card to a board by board id 
@@ -89,7 +91,7 @@ def get_card_by_id(card_id):
     return make_response(jsonify(card.to_dict()), 200)
 
 #Kate
-# Update a card by card id (like_count, title, description) 
+# Update a card by card id (like_count, message) 
 @card_bp.route("/<card_id>", methods = ["PUT"])
 def update_card_by_id(card_id):
     card = validate_model(Card, card_id)
