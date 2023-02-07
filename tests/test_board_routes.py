@@ -73,11 +73,14 @@ def test_read_one_board_does_not_exist(client, add_one_board):
     assert response.status_code == 404
     assert response_body == {"message": "Board 6 was not found"}
 
-def test_read_one_board_archived(client, add_one_board):
+def test_read_one_board_archived(client, add_two_boards):
     # Act
-    # how do I create Act here???
-    pass
+    client.delete("boards/1")
+    response = client.get("boards/1")
+    response_body = response.get_json()
     # Assert
+    assert response.status_code == 400
+    assert response_body == {"details": "This board is archived"}
 
 def test_read_one_board(client, add_two_boards):
     # Act
@@ -96,7 +99,7 @@ def test_update_one_board(client, add_one_board):
     })
     response_body = response.get_json()
     # Assert
-    assert response.status == '200 OK' # why is this different from others?
+    assert response.status_code == 200
     assert response_body["title"] == "Updated TITLE"
     assert response_body["owner"] == "Updated OWNER"
 
@@ -127,7 +130,7 @@ def test_patch_one_board_title(client, add_one_board):
     })
     response_body = response.get_json()
     # Assert
-    assert response.status == '200 OK' # why is this different from others?
+    assert response.status_code == 200
     assert response_body["title"] == "Updated TITLE"
     assert response_body["owner"] == "owner_3"
 
@@ -138,7 +141,7 @@ def test_patch_one_board_owner(client, add_one_board):
     })
     response_body = response.get_json()
     # Assert
-    assert response.status == '200 OK' # why is this different from others?
+    assert response.status_code == 200
     assert response_body["title"] == "title_3"
     assert response_body["owner"] == "Updated OWNER"
 
@@ -147,5 +150,5 @@ def test_delete_one_board(client, add_two_boards):
     response = client.delete("/boards/2")
     response_body = response.get_json()
     #Assert
-    assert response.status == "200 OK"
+    assert response.status_code == 200
     assert response_body["status"] == False
