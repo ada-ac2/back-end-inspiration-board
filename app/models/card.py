@@ -16,3 +16,11 @@ class Card(db.Model):
 
         return card_as_dict
 
+    @classmethod
+    def from_dict(cls, card_data):
+        new_card = Card(
+            message=card_data["message"],
+            likes_count=card_data["likes_count"],
+            board_id=card_data["board_id"]
+        )
+        return new_card

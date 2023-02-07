@@ -8,7 +8,6 @@ card_bp = Blueprint("card_bp", __name__, url_prefix="/cards")
 board_bp = Blueprint("board_bp", __name__, url_prefix="/boards")
 
 #  --------------------------------- Board routes ---------------------------------
-# Monica 
 # Add a board 
 @board_bp.route("", methods = ["POST"])
 def create_board():
@@ -17,6 +16,7 @@ def create_board():
         new_board = Board.from_dict(request_body)
     except KeyError as key_error:
         abort(make_response({"message": f"Bad request: {key_error.args[0]} attribute is missing"}, 400))
+
     db.session.add(new_board)
     db.session.commit()
     return make_response(
@@ -24,26 +24,22 @@ def create_board():
                 "title" : new_board.title,
                 "owner" : new_board.owner,
                 "cards": [] 
-            }), 200)
+            }), 201)
 
-# Monica
 # Add a card to a board by board id 
 @board_bp.route("/<board_id>/card", methods = ["POST"])
 def add_card_to_board(board_id):
-    board = validate_model(board_id)
-
+    board = validate_model(Board, board_id)
     request_body = request.get_json() 
-    new_card = Card(
-        message = request_body.message,
-        likes_count = request_body.likes_count, 
-        board_id = board_id, 
-        board = board 
-    )
+    try:
+        new_card = Card.from_dict(request_body)
+    except KeyError as key_error:
+        abort(make_response({"message": f"Bad request: {key_error.args[0]} attribute is missing"}, 400))
 
     db.session.add(new_card)
     db.session.commit()
 
-    return make_response(jsonify(new_card.to_dict()), 200) 
+    return make_response(jsonify(new_card.to_dict()), 201) 
 
 # Read a board by its id, display all cards underneath 
 @board_bp.route("/<board_id>/cards", methods = ["GET"])
@@ -92,7 +88,6 @@ def get_card_by_id(card_id):
     card = validate_model(Card, card_id)
     return make_response(jsonify(card.to_dict()), 200)
 
-#Kate
 # Update a card by card id (like_count, title, description) 
 @card_bp.route("/<card_id>", methods = ["PUT"])
 def update_card_by_id(card_id):
@@ -106,7 +101,6 @@ def update_card_by_id(card_id):
     message = f"Card {card_id} successfully updated"
     return make_response(jsonify(message), 200)
 
-# Soumya
 # # Delete a card 
 @card_bp.route("/<card_id>", methods = ["DELETE"])
 def delete_card(card_id):
