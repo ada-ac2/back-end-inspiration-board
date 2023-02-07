@@ -1,4 +1,5 @@
 from app import db
+# needed to establish one-to-many relationship
 from sqlalchemy.orm import relationship
 
 
@@ -19,8 +20,8 @@ class Board(db.Model):
 
     @classmethod
     def from_dict(cls, request_data):
-        new_board= Board(
-            title=request_data[0]["title"],
-            owner=request_data[0]["owner"]
+        new_board = Board(
+            title = request_data["title"],
+            owner = request_data["owner"],
         )
         return new_board
