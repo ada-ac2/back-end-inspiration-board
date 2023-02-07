@@ -19,7 +19,7 @@ def validate_board(request_body):
     if owner not in request_body or not isinstance(request_body[owner], str) or request_body[owner] is None:
         abort(make_response({"details": f"Request body must include {owner}."}, 400))
 
-def validate_attribute(record, request_body):
+def validate_and_set_attribute(record, request_body):
     for key, value in request_body.items():
         try:
             getattr(record, key)

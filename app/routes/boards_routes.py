@@ -1,7 +1,7 @@
 from app import db
 from app.models.board import Board
 from app.models.card import Card
-from .board_routes_helper import validate_model, validate_attribute, validate_board
+from .board_routes_helper import validate_model, validate_and_set_attribute, validate_board
 from flask import Blueprint, jsonify, make_response, request, abort
 
 
@@ -23,7 +23,8 @@ def get_boards():
     board_query = Board.query.all()
 
     for board in board_query:
-        boards.append(board.to_dict())
+        if board.status:
+            boards.append(board.to_dict())
     return jsonify(boards)
 
 @board_bp.route("/<board_id>", methods=["GET"])
@@ -42,7 +43,7 @@ def update_board(board_id):
     board.owner = request_body["owner"]
     db.session.commit()
     db.session.refresh(board)
-    return board.to_dict()
+    return board.to_dict(), 201
 
 """
 currently not working, will test again when i pull card models
@@ -61,7 +62,7 @@ def delete_board(board_id):
 def patch_board(board_id):
     board = validate_model(Board, board_id)
     request_body = request.get_json()
-    board = validate_attribute(board, request_body)
+    board = validate_and_set_attribute(board, request_body)
     db.session.commit()
     db.session.refresh(board)
-    return board.to_dict()
+    return board.to_dict(), 201
