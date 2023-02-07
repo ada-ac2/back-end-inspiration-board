@@ -68,7 +68,7 @@ def update_board(id):
 
     request_body = request.get_json()
     board.title = request_body["title"]
-    board.title = request_body["creator"]
+    board.creator = request_body["creator"]
     
 
     db.session.commit()
