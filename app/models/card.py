@@ -21,6 +21,6 @@ class Card(db.Model):
             "id": self.id,
             "message": self.message,
             "likes_count": self.likes_count,
-            "display_status": self.display_status,
+            "status": self.status,
             "board_id": self.board_id
         }
