@@ -24,12 +24,20 @@ def client(app):
 
 @pytest.fixture
 def add_two_boards(app):
-    board_1 = Board(title="title_1", owner="ownder_1")
-    board_2 = Board(title="title_2", owner="ownder_2")
+    board_1 = Board(title="title_1", owner="owner_1")
+    board_2 = Board(title="title_2", owner="owner_2")
     db.session.add_all([board_1, board_2])
     db.session.commit
 
     return [board_1, board_2]
+
+@pytest.fixture
+def add_one_board(app):
+    board_3 = Board(title="title_3", owner="owner_3")
+    db.session.add(board_3)
+    db.session.commit
+
+    return board_3
 
 @pytest.fixture
 def add_two_cards_to_board_one(app, add_two_boards):
