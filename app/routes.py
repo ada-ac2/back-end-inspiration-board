@@ -29,7 +29,7 @@ def create_board():
 # Add a card to a board by board id 
 @board_bp.route("/<board_id>/card", methods = ["POST"])
 def add_card_to_board(board_id):
-    board = validate_model(Board, board_id)
+    validate_model(Board, board_id)
     request_body = request.get_json() 
     try:
         new_card = Card.from_dict(request_body)
