@@ -1,5 +1,4 @@
 from app import db
-from sqlalchemy.orm import relationship
 
 
 class Board(db.Model):
@@ -20,8 +19,6 @@ class Board(db.Model):
     def from_dict(cls, request_data):
         new_board = Board(
             title = request_data["title"],
-            owner = request_data["owner"],
-            # I think we this for get and delete
-            cards = request_data["cards"]
+            owner = request_data["owner"]
         )
         return new_board
