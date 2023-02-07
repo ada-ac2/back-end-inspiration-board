@@ -22,7 +22,7 @@ class Board(db.Model):
         return board_as_dict
     
     @classmethod
-    def from_dict(cla, board_data):
+    def from_dict(cls, board_data):
         new_board = Board(
             title=board_data["title"],
             owner=board_data["owner"],
