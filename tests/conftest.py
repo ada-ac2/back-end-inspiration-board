@@ -26,6 +26,23 @@ def client(app):
     return app.test_client()
 
 @pytest.fixture
+def saved_two_boards(app):
+    board1 = Board(title="Hello,world!",
+                owner="Nad",
+                cards = []
+                )
+
+    board2 = Board(title="Hello,friend!",
+                owner="Jennifer",
+                cards = []
+                )
+
+    db.session.add_all([board1, board2])
+    db.session.commit()
+    db.session.refresh(board1, ["id"])
+    db.session.refresh(board2, ["id"])
+    
+@pytest.fixture
 def one_board(app):
     new_board = Board(title="My test board", owner=OWNER)
 
@@ -47,5 +64,4 @@ def one_card_to_board(app,one_board):
     db.session.add(new_card)
     db.session.commit()
     db.session.refresh(new_card,["id"])
-
 
