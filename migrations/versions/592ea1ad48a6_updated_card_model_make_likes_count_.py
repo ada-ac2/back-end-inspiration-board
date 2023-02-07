@@ -1,8 +1,8 @@
-"""Models Created
+"""updated card model: make likes_count defaulted to be 0
 
-Revision ID: 2a3aeb9a211e
+Revision ID: 592ea1ad48a6
 Revises: 
-Create Date: 2023-02-04 14:31:55.181889
+Create Date: 2023-02-07 08:51:16.379327
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2a3aeb9a211e'
+revision = '592ea1ad48a6'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,7 +27,7 @@ def upgrade():
     op.create_table('card',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('message', sa.String(), nullable=False),
-    sa.Column('likes_count', sa.Integer(), nullable=False),
+    sa.Column('likes_count', sa.Integer(), nullable=True),
     sa.Column('board_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['board_id'], ['board.id'], ),
     sa.PrimaryKeyConstraint('id')
