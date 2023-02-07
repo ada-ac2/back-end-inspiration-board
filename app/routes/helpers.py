@@ -13,7 +13,6 @@ def validate_model(cls, model_id):
 
     if model:
         return model
- 
     response_obj["statuscode"] = 404
     response_obj["message"] = f"{cls.__name__} id {model_id} is Not Found"
     abort(make_response(jsonify(response_obj),404))
