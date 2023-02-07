@@ -7,7 +7,7 @@ def validate_model(cls, model_id):
     except:
         response_obj["statuscode"] = 400
         response_obj["message"] = f"{cls.__name__} id {model_id} is Invalid"
-        abort(make_response(jsonify(response_obj,400)))
+        abort(make_response(jsonify(response_obj),400))
 
     model = cls.query.get(model_id)    
 
