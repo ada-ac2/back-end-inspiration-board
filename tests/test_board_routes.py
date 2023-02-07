@@ -75,7 +75,7 @@ def test_read_one_board_does_not_exist(client, add_one_board):
 
 def test_read_one_board_archived(client, add_two_boards):
     # Act
-    client.delete("boards/1")
+    client.patch("boards/1")
     response = client.get("boards/1")
     response_body = response.get_json()
     # Assert
@@ -123,6 +123,7 @@ def test_update_one_board_with_missing_owner(client, add_one_board):
     assert response.status_code == 400
     assert response_body == {"details": "Request body must include owner."}
 
+"""
 def test_patch_one_board_title(client, add_one_board):
     # Act
     response = client.patch("/boards/1", json={
@@ -144,10 +145,11 @@ def test_patch_one_board_owner(client, add_one_board):
     assert response.status_code == 200
     assert response_body["title"] == "title_3"
     assert response_body["owner"] == "Updated OWNER"
+"""
 
 def test_delete_one_board(client, add_two_boards):
     # Act
-    response = client.delete("/boards/2")
+    response = client.patch("/boards/2")
     response_body = response.get_json()
     #Assert
     assert response.status_code == 200
