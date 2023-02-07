@@ -27,12 +27,12 @@ def test_get_board_by_not_exist_id_return_404(client):
 
     assert response.status_code == 404
 
-def test_get_board_by_invalid_planet_id_return_400_bad_request_error(client, saved_two_boards):
+def test_get_board_by_invalid_id_return_400_bad_request_error(client, saved_two_boards):
     response = client.get("/boards/hello")
     response_body = response.get_json()
 
-    assert response.status_code == 200
-    assert response_body[0]["message"] == "Board id hello is Invalid"
+    assert response.status_code == 400
+    assert response_body["message"] == "Board id hello is Invalid"
 
 def test_get_all_boards_with_two_records_return_array_with_size_2(client, saved_two_boards):
     response = client.get("/boards")
