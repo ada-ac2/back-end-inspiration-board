@@ -94,7 +94,7 @@ def add_new_card_to_board(id):
     
     return new_card.to_dict(), 201
 
-# Get all Cards for the board with id
+# GET all cards for the board with id
 @boards_bp.route("/<id>/cards", methods=["GET"])
 def get_all_cards_for_board(id):
     board = validate_model(Board, id)
@@ -106,7 +106,7 @@ def get_all_cards_for_board(id):
     return jsonify(cards_response)
 
 
-# delete a card from the board with id 
+# DELETE a card from a board with ids 
 @boards_bp.route("/<board_id>/cards/<card_id>", methods=["DELETE"])
 def delete_card(board_id, card_id):
     board = validate_model(Board, board_id)

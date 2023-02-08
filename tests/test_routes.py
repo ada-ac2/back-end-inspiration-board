@@ -1,7 +1,13 @@
 from werkzeug.exceptions import HTTPException
 from app.board_routes import validate_model
 from app.models.board import Board
+from app.models.card import Card
 import pytest
+
+BOARD_TITLE = "Testing Board One"
+BOARD_CREATOR = "InspoBoardCheerup"
+
+CARD_MESSAGE = "Don't put off tomorrow what you can do today!"
 
 # tests on POST one board
 def test_create_one_board(client):
@@ -281,3 +287,66 @@ def test_create_one_card_to_board_with_message_more_than_40_characters(client, t
     # Assert
     assert response.status_code == 400
     assert response_body["message"] == "A message must be less than or equal to 40 characters"
+
+# tests on GET all cards for the board with id
+@pytest.mark.skip()
+def test_rentals_by_customer(client, one_posted_card):
+    response = client.get("/boards/1/cards")
+
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body[0]["message"] == CARD_MESSAGE
+
+
+# tests on DELETE one card from one board with ids
+@pytest.mark.skip()
+def test_delete_one_card_from_one_board(client, two_saved_boards, one_posted_card):
+    # Act
+    response = client.delete("/boards/1/cards/1")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert response_body == "Card 1 in Board 1 successfully deleted"
+    assert Card.query.get(1) == None
+
+@pytest.mark.skip()
+def test_does_not_delete_card_with_invalid_board_id(client, two_saved_boards, one_posted_card):
+    # Act
+    response = client.delete("/boards/helloworld/cards/1")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body == {"message": f"Board helloworld invalid"}
+
+@pytest.mark.skip()
+def test_does_not_delete_card_with_non_existent_board_id(client, two_saved_boards, one_posted_card):
+    # Act
+    response = client.delete("/boards/100/cards/1")
+    response_body = response.get_json()
+    # Assert
+    assert response.status_code == 404
+    assert response_body == {"message":f"Board 100 not found"}
+
+@pytest.mark.skip()
+def test_does_not_delete_card_with_invalid_card_id(client, two_saved_boards, one_posted_card):
+    # Act
+    response = client.delete("/boards/1/cards/hi")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body == {"message": f"Card hi invalid"}
+
+@pytest.mark.skip()
+def test_does_not_delete_card_with_non_existent_card_id(client, two_saved_boards, one_posted_card):
+    # Act
+    response = client.delete("/boards/1/cards/1000")
+    response_body = response.get_json()
+    # Assert
+    assert response.status_code == 404
+    assert response_body == {"message":f"Card 1000 not found"}
+
