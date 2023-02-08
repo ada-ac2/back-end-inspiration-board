@@ -19,7 +19,8 @@ class Board(db.Model):
         board_as_dict["owner"] = self.owner
         board_as_dict["status"] = self.status
         board_as_dict["selected"] = self.selected
-        # board_as_dict["cards"] = self.cards
+        # We could do this but I don't think we should
+        board_as_dict["cards"] = [x.to_dict() for x in self.cards]
         return board_as_dict
     
     @classmethod
