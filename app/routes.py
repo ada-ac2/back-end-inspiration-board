@@ -56,7 +56,7 @@ def create_new_card_to_board(board_id):
     except KeyError as e:
         key = str(e).strip("\'")
         abort(make_response(jsonify({"message": f"Request body must include {key}"}), 400))
-    
+
     db.session.add(new_card)
     db.session.commit()
 
@@ -95,6 +95,5 @@ def add_like_to_card(board_id, card_id):
     card.likes_count += 1
 
     db.session.add(card)
-    db.session.commit
-
+    db.session.commit()
     return make_response(jsonify({"message": f"Card #{card.card_id} now has {card.likes_count} likes"}), 200)
