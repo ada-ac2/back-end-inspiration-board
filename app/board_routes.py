@@ -80,10 +80,10 @@ def add_new_card_to_board(id):
     request_body = request.get_json()
 
     if "message" not in request_body or len(request_body["message"]) == 0:
-        abort(make_response({"message":"a message must be included to add a card"}, 400))
+        abort(make_response({"message":"A message must be included to add a card"}, 400))
    
     if len(request_body["message"]) > 40:
-        abort(make_response({"message":"a message must be less than or equal to 40 characters"}, 400))
+        abort(make_response({"message":"A message must be less than or equal to 40 characters"}, 400))
 
     new_card = Card.from_dict(request_body)
     new_card.board = board

@@ -230,6 +230,7 @@ def test_validate_model_invalid_id(two_saved_boards):
     with pytest.raises(HTTPException):
         result_board = validate_model(Board, "helloworld")
 
+#tests on POST one card to one board
 def test_create_one_card_to_board(client, two_saved_boards):
     # Act
     response = client.post("/boards/1/cards", json={
@@ -245,50 +246,38 @@ def test_create_one_card_to_board(client, two_saved_boards):
     assert response_body["board_id"] == 1
     assert response_body["board_title"] == "Testing Board One"
 
-@pytest.mark.skip()
-def test_create_one_board_missing_keyword_title(client):
+
+def test_create_one_card_to_board_missing_keyword_message(client, two_saved_boards):
     # Act
-    response = client.post("/boards", json={
-        "creator": "Zoro"       
+    response = client.post("/boards/1/cards", json={
     })
-    response_body = response.get_data(as_text=True)
+    response_body = response.get_json()
 
     # Assert
     assert response.status_code == 400
-    assert response_body == "{\"message\":\"A title must be included to add a board\"}\n"
-@pytest.mark.skip()
-def test_create_one_board_empty_title(client):
+    assert response_body["message"] == "A message must be included to add a card"
+
+
+
+def test_create_one_card_to_board_empty_message(client, two_saved_boards):
     # Act
-    response = client.post("/boards", json={
-        "title": "",
-        "creator": "Zoro"       
+    response = client.post("/boards/1/cards", json={
+        "message": ""
     })
-    response_body = response.get_data(as_text=True)
+    response_body = response.get_json()
 
     # Assert
     assert response.status_code == 400
-    assert response_body == "{\"message\":\"A title must be included to add a board\"}\n"
-@pytest.mark.skip()
-def test_create_one_board_missing_keyword_creator(client):
+    assert response_body["message"] == "A message must be included to add a card"
+
+
+def test_create_one_card_to_board_with_message_more_than_40_characters(client, two_saved_boards):
     # Act
-    response = client.post("/boards", json={
-        "title": "like the dog"
+    response = client.post("/boards/1/cards", json={
+        "message": "Happy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     })
-    response_body = response.get_data(as_text=True)
+    response_body = response.get_json()
 
     # Assert
     assert response.status_code == 400
-    assert response_body == "{\"message\":\"A creator must be included to add a board\"}\n"
-@pytest.mark.skip()
-def test_create_one_board_empty_creator(client):
-    # Act
-    response = client.post("/boards", json={
-        "title": "like the dog",
-        "creator": ""  
-    })
-    response_body = response.get_data(as_text=True)
-
-    # Assert
-    assert response.status_code == 400
-    assert response_body == "{\"message\":\"A creator must be included to add a board\"}\n"
-
+    assert response_body["message"] == "A message must be less than or equal to 40 characters"
