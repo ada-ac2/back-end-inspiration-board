@@ -45,8 +45,8 @@ def update_board(board_id):
     db.session.refresh(board)
     return board.to_dict()
 
-@board_bp.route("/<board_id>", methods=["DELETE"])
-def delete_board(board_id):
+@board_bp.route("/<board_id>", methods=["PATCH"])
+def archive_board(board_id):
     board = validate_model(Board, board_id)
     # if a board is deleted, this board and its associated cards will be archived
     cards = board.cards
@@ -56,6 +56,8 @@ def delete_board(board_id):
     db.session.commit()
     return board.to_dict()
 
+"""
+This has same path as archive_board(), if we need it we need to update path
 @board_bp.route("/<board_id>", methods=["PATCH"])
 def patch_board(board_id):
     board = validate_model(Board, board_id)
@@ -64,3 +66,4 @@ def patch_board(board_id):
     db.session.commit()
     db.session.refresh(board)
     return board.to_dict()
+"""

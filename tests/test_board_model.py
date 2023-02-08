@@ -31,7 +31,7 @@ def test_to_dict_with_data():
     }
     result = Board.from_dict(test_data).to_dict()
     # Assert
-    assert len(result) == 5
+    assert len(result) == 6
     assert result["id"] == None
     assert result["title"] == "Test Title 12"
     assert result["owner"] == "Test Owner 12"
