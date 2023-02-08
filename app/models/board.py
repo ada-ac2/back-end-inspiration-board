@@ -20,7 +20,7 @@ class Board(db.Model):
         board_as_dict["status"] = self.status
         board_as_dict["selected"] = self.selected
         # We could do this but I don't think we should
-        board_as_dict["cards"] = [x.to_dict() for x in self.cards]
+        board_as_dict["cards"] = [x.to_dict() for x in self.cards if x.to_dict()["status"]]
         return board_as_dict
     
     @classmethod
