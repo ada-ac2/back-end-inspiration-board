@@ -56,7 +56,7 @@ def create_new_card_to_board(board_id):
     except KeyError as e:
         key = str(e).strip("\'")
         abort(make_response(jsonify({"message": f"Request body must include {key}"}), 400))
-    
+
     db.session.add(new_card)
     db.session.commit()
 
@@ -96,23 +96,5 @@ def add_like_to_card(board_id, card_id):
     card.likes_count += 1
 
     db.session.add(card)
-    db.session.commit
-
-    return make_response(jsonify({"message": f"Card #{card.card_id} now has {card.likes_count} likes"}), 200)
-
-
-# PATCH /board/<board_id>/cards/<card_id>
-@boards_bp.route("/<board_id>/cards/<card_id>", methods=["PATCH"])
-def update_like_to_card(board_id, card_id):
-    card_data = request.get_json()
-    board = validate_model(Board, board_id)
-    card = validate_model(Card, card_id)
-
-    card.likes_count = card_data["likes_count"]
-
-    db.session.add(card)
     db.session.commit()
-
-    # return make_response(jsonify({"message": f"Card #{card.card_id} now has {card.likes_count} likes"}), 200)
-    return make_response(card.to_dict(),201)
-    
+    return make_response(jsonify({"message": f"Card #{card.card_id} now has {card.likes_count} likes"}), 200)

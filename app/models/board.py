@@ -9,6 +9,7 @@ class Board(db.Model):
     owner = db.Column(db.String, nullable=False)
     cards = db.relationship("Card", back_populates="board")
 
+
     def to_dict(self):
         return {
             "board_id": self.board_id,
@@ -21,6 +22,6 @@ class Board(db.Model):
     def from_dict(cls, request_data):
         new_board = Board(
             title = request_data["title"],
-            owner = request_data["owner"]
+            owner = request_data["owner"],
         )
         return new_board
