@@ -84,7 +84,9 @@ def test_like_card_increases_likes_count(client, add_two_cards_to_board_one):
     response = client.patch("/boards/1/cards/like/1")
 
     assert response.status_code == 200
-    assert response.get_json() == {"message":f"card #1 has been liked. It has 1 likes now"}
+    assert response.get_json()["id"] == 1 
+    assert response.get_json()["likes_count"] == 1 
+    # assert response.get_json()["message"] == f"card #1 has been liked. It has 1 likes now"
 
 
 # tests for PATCH "archive/<card_id>"

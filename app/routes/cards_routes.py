@@ -52,9 +52,11 @@ def like_card(board_id, card_id):
     card = validate_model(Card, card_id)
     card.likes_count += 1
     db.session.commit()
-    return make_response(
-        {"message":f"card #{card_id} has been liked. It has {card.likes_count} likes now"}, 200
-    )
+    print(card.to_dict())
+    return make_response(jsonify(card.to_dict()), 200)
+        # {"message":f"card #{card_id} has been liked. It has {card.likes_count} likes now", 
+        # "card": card.to_dict()}, 200
+    # ))
 
 
 @cards_bp.route("", methods=["GET"])
