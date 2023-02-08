@@ -67,6 +67,8 @@ def get_all_boards():
 @board_bp.route("/<board_id>", methods = ["DELETE"])
 def delete_board(board_id):
     board = validate_model(Board, board_id)
+    for card in board.cards:
+        db.session.delete(card)
     db.session.delete(board)
     db.session.commit()
 
