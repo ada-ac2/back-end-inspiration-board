@@ -96,4 +96,5 @@ def add_like_to_card(board_id, card_id):
 
     db.session.add(card)
     db.session.commit()
-    return make_response(jsonify({"message": f"Card #{card.card_id} now has {card.likes_count} likes"}), 200)
+    
+    return make_response(jsonify(card.to_dict()), 200)
