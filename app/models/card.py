@@ -7,14 +7,15 @@ class Card(db.Model):
     board = db.relationship("Board", back_populates="cards")
 
     def to_dict(self):
-        card_dict = {}
-        card_dict["id"] = self.id
-        card_dict["message"] = self.message
-        card_dict["likes_count"] = self.likes_count
-        card_dict["board_id"] = self.board_id
-        card_dict["board_title"] = self.board.title
-        
-        return card_dict
+
+            return {
+            "id" : self.id,
+            "message" : self.message,
+            "likes_count" : self.likes_count,
+            "board_id" : self.board_id,
+            "board_title" : self.board.title
+            
+        }
     
     @classmethod
     def from_dict(cls, card_data):

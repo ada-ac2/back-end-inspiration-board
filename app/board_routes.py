@@ -2,7 +2,7 @@ from app import db
 from app.models.board import Board
 from flask import Blueprint, jsonify, abort, make_response, request 
 from app.models.card import Card
-
+from .routes_helper import validate_model
 
 boards_bp = Blueprint("boards_bp", __name__, url_prefix="/boards")
 
@@ -22,7 +22,7 @@ def create_Board():
     db.session.add(new_board)
     db.session.commit()
 
-    return make_response(f"Board {new_board.title} successfully created", 201)
+    return new_board.to_dict(), 201
 
 @boards_bp.route("", methods=["GET"])
 def read_all_boards():
@@ -43,19 +43,6 @@ def read_all_boards():
     for board in boards:
         boards_response.append(board.to_dict())
     return jsonify(boards_response)
-
-def validate_model(cls, model_id):
-    try:
-        model_id = int(model_id)
-    except:
-        abort(make_response({"message":f"{cls.__name__} {model_id} invalid"}, 400))
-
-    model = cls.query.get(model_id)
-    
-    if not model:
-        abort(make_response({"message":f"{cls.__name__} {model_id} not found"}, 404))
-    
-    return model
 
 @boards_bp.route("/<id>", methods=["GET"])
 def read_one_board(id):
@@ -104,8 +91,8 @@ def add_new_card_to_board(id):
     db.session.add(new_card)
     db.session.commit()
 
-    message = f"Card {new_card.message} created with Board {board.title}"
-    return make_response(jsonify(message), 201)
+    
+    return new_card.to_dict(), 201
 
 # Get all Cards for the board with id
 @boards_bp.route("/<id>/cards", methods=["GET"])

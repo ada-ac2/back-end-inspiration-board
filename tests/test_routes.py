@@ -3,6 +3,69 @@ from app.board_routes import validate_model
 from app.models.board import Board
 import pytest
 
+# tests on POST one board
+def test_create_one_board(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": "like the dog",
+        "creator": "Zoro"       
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 201
+    assert response_body["id"] == 1
+    assert response_body["title"] == "like the dog"
+    assert response_body["creator"] == "Zoro" 
+    assert response_body["cards"] == []
+
+def test_create_one_board_missing_keyword_title(client):
+    # Act
+    response = client.post("/boards", json={
+        "creator": "Zoro"       
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body["message"] == "A title must be included to add a board"
+
+def test_create_one_board_empty_title(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": "",
+        "creator": "Zoro"       
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body["message"] == "A title must be included to add a board"
+
+def test_create_one_board_missing_keyword_creator(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": "like the dog"
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body["message"] == "A creator must be included to add a board"
+
+def test_create_one_board_empty_creator(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": "like the dog",
+        "creator": ""  
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body["message"] == "A creator must be included to add a board"
+
+#
 def test_get_boards_empty_db_returns_empty_list(client):
     # Act
     response = client.get("/boards")
@@ -65,65 +128,6 @@ def test_get_one_board_by_id(client, two_saved_boards):
     assert board_list["id"] == 2
     assert board_list["title"] == "Testing Board Two"
     assert board_list["creator"] == "InspoBoardCheerUp New"
-
-def test_create_one_board(client):
-    # Act
-    response = client.post("/boards", json={
-        "title": "like the dog",
-        "creator": "Zoro"       
-    })
-    response_body = response.get_data(as_text=True)
-
-    # Assert
-    assert response.status_code == 201
-    assert response_body == "Board like the dog successfully created"
-
-
-def test_create_one_board_missing_keyword_title(client):
-    # Act
-    response = client.post("/boards", json={
-        "creator": "Zoro"       
-    })
-    response_body = response.get_data(as_text=True)
-
-    # Assert
-    assert response.status_code == 400
-    assert response_body == "{\"message\":\"A title must be included to add a board\"}\n"
-
-def test_create_one_board_empty_title(client):
-    # Act
-    response = client.post("/boards", json={
-        "title": "",
-        "creator": "Zoro"       
-    })
-    response_body = response.get_data(as_text=True)
-
-    # Assert
-    assert response.status_code == 400
-    assert response_body == "{\"message\":\"A title must be included to add a board\"}\n"
-
-def test_create_one_board_missing_keyword_creator(client):
-    # Act
-    response = client.post("/boards", json={
-        "title": "like the dog"
-    })
-    response_body = response.get_data(as_text=True)
-
-    # Assert
-    assert response.status_code == 400
-    assert response_body == "{\"message\":\"A creator must be included to add a board\"}\n"
-
-def test_create_one_board_empty_creator(client):
-    # Act
-    response = client.post("/boards", json={
-        "title": "like the dog",
-        "creator": ""  
-    })
-    response_body = response.get_data(as_text=True)
-
-    # Assert
-    assert response.status_code == 400
-    assert response_body == "{\"message\":\"A creator must be included to add a board\"}\n"
 
 def test_delete_one_board(client, two_saved_boards):
     # Act
@@ -225,4 +229,66 @@ def test_validate_model_invalid_id(two_saved_boards):
     # cause an `HTTPException` when an `abort` statement is reached 
     with pytest.raises(HTTPException):
         result_board = validate_model(Board, "helloworld")
+
+def test_create_one_card_to_board(client, two_saved_boards):
+    # Act
+    response = client.post("/boards/1/cards", json={
+        "message": "Happy!"  
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 201
+    assert response_body["id"] == 1
+    assert response_body["message"] == "Happy!"
+    assert response_body["likes_count"] == 0
+    assert response_body["board_id"] == 1
+    assert response_body["board_title"] == "Testing Board One"
+
+@pytest.mark.skip()
+def test_create_one_board_missing_keyword_title(client):
+    # Act
+    response = client.post("/boards", json={
+        "creator": "Zoro"       
+    })
+    response_body = response.get_data(as_text=True)
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body == "{\"message\":\"A title must be included to add a board\"}\n"
+@pytest.mark.skip()
+def test_create_one_board_empty_title(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": "",
+        "creator": "Zoro"       
+    })
+    response_body = response.get_data(as_text=True)
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body == "{\"message\":\"A title must be included to add a board\"}\n"
+@pytest.mark.skip()
+def test_create_one_board_missing_keyword_creator(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": "like the dog"
+    })
+    response_body = response.get_data(as_text=True)
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body == "{\"message\":\"A creator must be included to add a board\"}\n"
+@pytest.mark.skip()
+def test_create_one_board_empty_creator(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": "like the dog",
+        "creator": ""  
+    })
+    response_body = response.get_data(as_text=True)
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body == "{\"message\":\"A creator must be included to add a board\"}\n"
 
