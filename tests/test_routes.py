@@ -9,7 +9,32 @@ BOARD_CREATOR = "InspoBoardCheerup"
 
 CARD_MESSAGE = "Don't put off tomorrow what you can do today!"
 
-# tests on POST one board
+##### tests on validate_model
+def test_validate_model(two_saved_boards):
+    # Act
+    result_board = validate_model(Board, 2)
+
+    # Assert
+    assert result_board.id == 2
+    assert result_board.title == "Testing Board Two"
+    assert result_board.creator == "InspoBoardCheerUp New"
+    
+
+def test_validate_model_missing_id(two_saved_boards):
+    # Act & Assert
+    # Calling `validate_book` without being invoked by a route will
+    # cause an `HTTPException` when an `abort` statement is reached 
+    with pytest.raises(HTTPException):
+        result_board = validate_model(Board, "3")
+
+def test_validate_model_invalid_id(two_saved_boards):
+    # Act & Assert
+    # Calling `validate_book` without being invoked by a route will
+    # cause an `HTTPException` when an `abort` statement is reached 
+    with pytest.raises(HTTPException):
+        result_board = validate_model(Board, "helloworld")
+
+##### tests on POST one board
 def test_create_one_board(client):
     # Act
     response = client.post("/boards", json={
@@ -71,7 +96,7 @@ def test_create_one_board_empty_creator(client):
     assert response.status_code == 400
     assert response_body["message"] == "A creator must be included to add a board"
 
-#
+##### tests on GET all boards
 def test_get_boards_empty_db_returns_empty_list(client):
     # Act
     response = client.get("/boards")
@@ -80,13 +105,6 @@ def test_get_boards_empty_db_returns_empty_list(client):
     assert response.status_code == 200
     assert response.get_json() == []
 
-def test_get_board_with_id_empty_db_returns_404(client):
-    # Act
-    response = client.get("/boards/100")
-
-    # Assert 
-    assert response.status_code == 404
-    assert response.get_json() == {"message":f"Board 100 not found"}
 
 def test_get_boards_optional_query_returns_seeded_boards(client, two_saved_boards):
     response = client.get("/boards")
@@ -124,6 +142,7 @@ def test_get_one_board_with_title_param_desc_sort(client, two_saved_boards):
     assert board_list[0]["title"] == "Testing Board Two"
     assert board_list[0]["creator"] == "InspoBoardCheerUp New"
 
+##### tests on GET one board
 def test_get_one_board_by_id(client, two_saved_boards):
     response = client.get("/boards/2") 
 
@@ -134,6 +153,16 @@ def test_get_one_board_by_id(client, two_saved_boards):
     assert board_list["id"] == 2
     assert board_list["title"] == "Testing Board Two"
     assert board_list["creator"] == "InspoBoardCheerUp New"
+
+def test_get_board_with_id_empty_db_returns_404(client):
+    # Act
+    response = client.get("/boards/100")
+
+    # Assert 
+    assert response.status_code == 404
+    assert response.get_json() == {"message":f"Board 100 not found"}
+
+##### tests on DELETE one board
 
 def test_delete_one_board(client, two_saved_boards):
     # Act
@@ -161,7 +190,7 @@ def test_does_not_delete_board_with_nonexistent_id(client, two_saved_boards):
     assert response.status_code == 404
     assert response.get_json() == {"message":f"Board 100 not found"}
 
-#####
+##### tests on UPDATE one board
 def test_does_not_update_one_board_with_invalid_id(client, two_saved_boards):
     # Act
     response = client.put("/boards/helloworld", json={
@@ -212,31 +241,7 @@ def test_update_board_with_extra_keys(client, two_saved_boards):
     assert response.status_code == 200
     assert response_body == "Board #1 successfully updated"
 
-def test_validate_model(two_saved_boards):
-    # Act
-    result_board = validate_model(Board, 2)
-
-    # Assert
-    assert result_board.id == 2
-    assert result_board.title == "Testing Board Two"
-    assert result_board.creator == "InspoBoardCheerUp New"
-    
-
-def test_validate_model_missing_id(two_saved_boards):
-    # Act & Assert
-    # Calling `validate_book` without being invoked by a route will
-    # cause an `HTTPException` when an `abort` statement is reached 
-    with pytest.raises(HTTPException):
-        result_board = validate_model(Board, "3")
-
-def test_validate_model_invalid_id(two_saved_boards):
-    # Act & Assert
-    # Calling `validate_book` without being invoked by a route will
-    # cause an `HTTPException` when an `abort` statement is reached 
-    with pytest.raises(HTTPException):
-        result_board = validate_model(Board, "helloworld")
-
-#tests on POST one card to one board
+##### tests on POST one card to one board
 def test_create_one_card_to_board(client, two_saved_boards):
     # Act
     response = client.post("/boards/1/cards", json={
@@ -288,7 +293,7 @@ def test_create_one_card_to_board_with_message_more_than_40_characters(client, t
     assert response.status_code == 400
     assert response_body["message"] == "A message must be less than or equal to 40 characters"
 
-# tests on GET all cards for the board with id
+##### tests on GET all cards for the board with id
 @pytest.mark.skip()
 def test_rentals_by_customer(client, one_posted_card):
     response = client.get("/boards/1/cards")
@@ -300,7 +305,7 @@ def test_rentals_by_customer(client, one_posted_card):
     assert response_body[0]["message"] == CARD_MESSAGE
 
 
-# tests on DELETE one card from one board with ids
+##### tests on DELETE one card from one board with ids
 @pytest.mark.skip()
 def test_delete_one_card_from_one_board(client, two_saved_boards, one_posted_card):
     # Act
@@ -350,3 +355,15 @@ def test_does_not_delete_card_with_non_existent_card_id(client, two_saved_boards
     assert response.status_code == 404
     assert response_body == {"message":f"Card 1000 not found"}
 
+
+# test on DELTETE one card
+@pytest.mark.skip()
+def test_delete_one_card(client, one_card):
+    # Act
+    response = client.delete("/cards/1")
+    response_body = response.get_json()
+
+    # Assert
+    assert response_body == "Card #1 successfully deleted"
+    assert response.status_code == 200
+    assert Card.query.get(1) == None
