@@ -57,7 +57,13 @@ def one_card(app):
 
 
 @pytest.fixture
-def one_posted_card(app, client, one_board, one_card):
-    response = client.post("boards/1/cards", json={
-        "message": CARD_MESSAGE
-    })
+def one_posted_card(app):
+    one_board = Board(title=BOARD_TITLE,
+                creator=BOARD_CREATOR)
+    new_card = Card(
+        message=CARD_MESSAGE
+        )
+    new_card.board = one_board
+    db.session.add_all([new_card,one_board])
+    db.session.commit()
+    

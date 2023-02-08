@@ -294,7 +294,7 @@ def test_create_one_card_to_board_with_message_more_than_40_characters(client, t
     assert response_body["message"] == "A message must be less than or equal to 40 characters"
 
 ##### tests on GET all cards for the board with id
-@pytest.mark.skip()
+#@pytest.mark.skip()
 def test_rentals_by_customer(client, one_posted_card):
     response = client.get("/boards/1/cards")
 
@@ -357,13 +357,13 @@ def test_does_not_delete_card_with_non_existent_card_id(client, two_saved_boards
 
 
 # test on DELTETE one card
-@pytest.mark.skip()
+#@pytest.mark.skip()
 def test_delete_one_card(client, one_card):
     # Act
     response = client.delete("/cards/1")
     response_body = response.get_json()
 
     # Assert
-    assert response_body == "Card #1 successfully deleted"
+    assert response_body["message"] == "Card #1 successfully deleted"
     assert response.status_code == 200
     assert Card.query.get(1) == None

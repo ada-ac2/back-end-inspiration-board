@@ -81,7 +81,7 @@ def add_new_card_to_board(id):
 
     if "message" not in request_body or len(request_body["message"]) == 0:
         abort(make_response({"message":"A message must be included to add a card"}, 400))
-   
+    
     if len(request_body["message"]) > 40:
         abort(make_response({"message":"A message must be less than or equal to 40 characters"}, 400))
 
