@@ -49,7 +49,8 @@ def create_one_board():
 def create_new_card_to_board(board_id):
     board = validate_model(Board, board_id)
     card_data = request.get_json()
-    card_data["board_id"] = board.board_id
+    board.board_id = card_data["board_id"]
+    
     try:
         new_card = Card.from_dict(card_data)
     except KeyError as e:
@@ -87,6 +88,7 @@ def delete_card_by_id(board_id, card_id):
 
     return make_response(jsonify({"message": f"Card #{card.card_id} successfully deleted"}), 200)
 
+# PUT
 @boards_bp.route("/<board_id>/cards/<card_id>", methods=["PUT"])
 def add_like_to_card(board_id, card_id):
     board = validate_model(Board, board_id)
@@ -97,3 +99,20 @@ def add_like_to_card(board_id, card_id):
     db.session.commit
 
     return make_response(jsonify({"message": f"Card #{card.card_id} now has {card.likes_count} likes"}), 200)
+
+
+# PATCH /board/<board_id>/cards/<card_id>
+@boards_bp.route("/<board_id>/cards/<card_id>", methods=["PATCH"])
+def update_like_to_card(board_id, card_id):
+    card_data = request.get_json()
+    board = validate_model(Board, board_id)
+    card = validate_model(Card, card_id)
+
+    card.likes_count = card_data["likes_count"]
+
+    db.session.add(card)
+    db.session.commit()
+
+    # return make_response(jsonify({"message": f"Card #{card.card_id} now has {card.likes_count} likes"}), 200)
+    return make_response(card.to_dict(),201)
+    
