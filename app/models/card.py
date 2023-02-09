@@ -26,5 +26,6 @@ class Card(db.Model):
         new_card = Card(
                     board_id = card_data["board_id"],
                     message = card_data["message"],
+                    likes_count = card_data["likes_count"]
                     )
         return new_card
