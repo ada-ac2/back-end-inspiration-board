@@ -49,13 +49,8 @@ def create_one_board():
 def create_new_card_to_board(board_id):
     board = validate_model(Board, board_id)
     card_data = request.get_json()
-    board.board_id = card_data["board_id"]
-    
-    try:
-        new_card = Card.from_dict(card_data)
-    except KeyError as e:
-        key = str(e).strip("\'")
-        abort(make_response(jsonify({"message": f"Request body must include {key}"}), 400))
+    card_data["board_id"] = board.board_id
+    new_card = validate_request_and_create_entry(Card, card_data)
 
     db.session.add(new_card)
     db.session.commit()
@@ -97,4 +92,5 @@ def add_like_to_card(board_id, card_id):
 
     db.session.add(card)
     db.session.commit()
-    return make_response(jsonify({"message": f"Card #{card.card_id} now has {card.likes_count} likes"}), 200)
+    
+    return make_response(jsonify(card.to_dict()), 200)

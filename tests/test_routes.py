@@ -169,7 +169,7 @@ def test_update_likes_on_card(client, add_one_card_to_id_2):
 
     # Assert
     assert response.status_code == 200
-    assert response_body == {"message": "Card #1 now has 3 likes"}
+    assert response_body["likes_count"] == 3
 
 def test_delete_one_card(client, one_saved_card):
     # Act 
