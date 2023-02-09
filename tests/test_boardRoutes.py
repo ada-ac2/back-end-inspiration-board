@@ -16,9 +16,13 @@ def test_get_all_boards_return_200_and_all_exist_board(client,saved_two_boards):
     response_body = response.get_json()
 
     assert response.status_code == 200
+    assert response_body["data"][0]["id"] == 1
     assert response_body["data"][0]["title"] == "Hello,world!"
     assert response_body["data"][0]["owner"] == "Nad"
-    assert response_body["data"][0]["cards"] == []
+    assert response_body["data"][1]["id"] == 2
+    assert response_body["data"][1]["title"] == "Hello,friend!"
+    assert response_body["data"][1]["owner"] == "Jennifer"
+    #assert response_body["data"][0]["cards"] == []
 
 def test_get_board_by_id_return_200_successful_code(client, saved_two_boards):
     response = client.get("/boards/1")
