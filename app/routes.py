@@ -49,13 +49,8 @@ def create_one_board():
 def create_new_card_to_board(board_id):
     board = validate_model(Board, board_id)
     card_data = request.get_json()
-    new_card = Card.from_dict(card_data)
     card_data["board_id"] = board.board_id
-    try:
-        new_card = Card.from_dict(card_data)
-    except KeyError as e:
-        key = str(e).strip("\'")
-        abort(make_response(jsonify({"message": f"Request body must include {key}"}), 400))
+    new_card = validate_request_and_create_entry(Card, card_data)
 
     db.session.add(new_card)
     db.session.commit()
