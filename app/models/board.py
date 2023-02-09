@@ -23,7 +23,7 @@ class Board(db.Model):
         title_as_dict = {}
         title_as_dict["id"] = self.id
         title_as_dict["title"] = self.title
-        title_as_dict["owner"] = self.title
+        title_as_dict["owner"] = self.owner
 
         return title_as_dict
     
