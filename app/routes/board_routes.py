@@ -36,7 +36,7 @@ def read_all_boards():
 
     board_response = []
     for board in boards:
-        board_response.append(board.to_dict())
+        board_response.append(board.to_dict_title())
 
     response_obj = {
         "statuscode": 200,

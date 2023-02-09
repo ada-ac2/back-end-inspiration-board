@@ -19,6 +19,14 @@ class Board(db.Model):
 
         return board_as_dict
 
+    def to_dict_title(self):
+        title_as_dict = {}
+        title_as_dict["id"] = self.id
+        title_as_dict["title"] = self.title
+        title_as_dict["owner"] = self.title
+
+        return title_as_dict
+    
     @classmethod
     def from_dict(cls, board_data):
         new_board = Board(title = board_data["title"],
