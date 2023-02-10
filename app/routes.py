@@ -3,7 +3,6 @@ from app import db
 from app.models.board import Board 
 from app.models.card import Card 
 
-# example_bp = Blueprint('example_bp', __name__)
 card_bp = Blueprint("card_bp", __name__, url_prefix="/cards")
 board_bp = Blueprint("board_bp", __name__, url_prefix="/boards")
 
@@ -13,10 +12,6 @@ board_bp = Blueprint("board_bp", __name__, url_prefix="/boards")
 def create_board():
     board_data = validate_board_input(request.get_json())
     new_board = Board.from_dict(board_data)
-    # try:
-    #     new_board = Board.from_dict(request_body)
-    # except KeyError as key_error:
-    #     abort(make_response({"message": f"Bad request: {key_error.args[0]} attribute is missing"}, 400))
 
     db.session.add(new_board)
     db.session.commit()

@@ -267,9 +267,6 @@ def test_delete_board_invalid_id(client, one_board,two_board, three_board, one_c
     assert response.status_code == 400
     assert response_body == {"message": "invalid invalid"}
 
-# Tests for Card routes
-# GET all cards ???
-
 # GET card by id
 def test_get_one_card_by_id(client,one_board,two_board, three_board, one_card,two_card, three_card,four_card,five_card, six_card):
     response_one = client.get('/cards/1')
