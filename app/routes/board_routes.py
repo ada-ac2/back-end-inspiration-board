@@ -3,6 +3,7 @@ from app import db
 from app.models.board import Board
 from app.routes.helpers import validate_model, validate_request_body
 from app.models.card import Card
+from app.routes.slack_requests import sendCardtoSlack
 
 # blueprint for Board
 boards_bp = Blueprint("boards_bp", __name__, url_prefix="/boards")
@@ -78,6 +79,8 @@ def create_card_to_board(board_id):
 
     db.session.add(new_card)
     db.session.commit()
+
+    sendCardtoSlack(new_card)
 
     response_obj = {
         "statuscode": 201,
