@@ -52,7 +52,6 @@ def get_all_boards():
         board_response.append(board.to_dict())
     return jsonify(board_response)
 
-# Soumya
 # Delete a board by board id
 @board_bp.route("/<board_id>", methods = ["DELETE"])
 def delete_board(board_id):
@@ -75,14 +74,12 @@ def get_all_cards():
         cards_response.append(card.to_dict())
     return jsonify(cards_response)
 
-#Megan    
 # Get card by card id 
 @card_bp.route("/<card_id>", methods = ["GET"])
 def get_card_by_id(card_id):
     card = validate_model(Card, card_id)
     return make_response(jsonify(card.to_dict()), 200)
 
-#Kate
 # Update a card by card id (like_count, message) 
 @card_bp.route("/<card_id>", methods = ["PUT"])
 def update_card_by_id(card_id):
