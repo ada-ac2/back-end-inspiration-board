@@ -1,7 +1,13 @@
 import pytest
 from app import create_app
 from app import db
+from app.models.board import Board
+from app.models.card import Card
 
+BOARD_TITLE = "Testing Board One"
+BOARD_CREATOR = "InspoBoardCheerup"
+
+CARD_MESSAGE = "Don't put off tomorrow what you can do today!"
 
 @pytest.fixture
 def app():
@@ -20,3 +26,44 @@ def app():
 @pytest.fixture
 def client(app):
     return app.test_client()
+
+
+@pytest.fixture
+def one_board(app):
+    new_board = Board(title=BOARD_TITLE,
+                creator=BOARD_CREATOR)
+    db.session.add(new_board)
+    db.session.commit()
+
+@pytest.fixture
+def two_saved_boards(app):
+    # Arrange
+    b1 = Board(title=BOARD_TITLE,
+                creator=BOARD_CREATOR)
+    b2 = Board(title="Testing Board Two",
+                creator="InspoBoardCheerUp New")
+    
+
+    db.session.add_all([b1, b2])
+    db.session.commit()
+
+@pytest.fixture
+def one_card(app):
+    new_card = Card(
+        message=CARD_MESSAGE
+        )
+    db.session.add(new_card)
+    db.session.commit()
+
+
+@pytest.fixture
+def one_posted_card(app):
+    one_board = Board(title=BOARD_TITLE,
+                creator=BOARD_CREATOR)
+    new_card = Card(
+        message=CARD_MESSAGE
+        )
+    new_card.board = one_board
+    db.session.add_all([new_card,one_board])
+    db.session.commit()
+    
